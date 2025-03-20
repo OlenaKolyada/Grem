@@ -1,0 +1,19 @@
+nelmio_api_doc:
+    documentation:
+        info:
+            title: "Grem API"
+            description: "Video Game Blog"
+            version: "1.0.0"
+        security:
+            - cookieAuth: []
+        components:
+            securitySchemes:
+                cookieAuth:
+                    type: apiKey
+                    in: cookie
+                    name: session_id
+    models:
+        use_jms: false
+    areas:
+        path_patterns:
+            - ^/api(?!/doc$)

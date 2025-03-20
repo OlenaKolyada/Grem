@@ -1,0 +1,97 @@
+countries:
+  - name: Andorra
+    code: AD
+  - name: Argentina
+    code: AR
+  - name: Australia
+    code: AU
+  - name: Austria
+    code: AT
+  - name: Belarus
+    code: BY
+  - name: Belgium
+    code: BE
+  - name: Brazil
+    code: BR
+  - name: Bulgaria
+    code: BG
+  - name: Canada
+    code: CA
+  - name: Chile
+    code: CL
+  - name: China
+    code: CN
+  - name: Croatia
+    code: HR
+  - name: Cuba
+    code: CU
+  - name: Cyprus
+    code: CY
+  - name: Czech Republic
+    code: CZ
+  - name: Denmark
+    code: DK
+  - name: Estonia
+    code: EE
+  - name: Finland
+    code: FI
+  - name: France
+    code: FR
+  - name: Germany
+    code: DE
+  - name: Greece
+    code: GR
+  - name: Hungary
+    code: HU
+  - name: Iceland
+    code: IS
+  - name: Ireland
+    code: IE
+  - name: Italy
+    code: IT
+  - name: Japan
+    code: JP
+  - name: Korea
+    code: KR
+  - name: Latvia
+    code: LV
+  - name: Lithuania
+    code: LT
+  - name: Malta
+    code: MT
+  - name: Mexico
+    code: MX
+  - name: Moldova
+    code: MD
+  - name: Monaco
+    code: MC
+  - name: Netherlands
+    code: NL
+  - name: New Zealand
+    code: NZ
+  - name: Norway
+    code: NO
+  - name: Peru
+    code: PE
+  - name: Poland
+    code: PL
+  - name: Portugal
+    code: PT
+  - name: Romania
+    code: RO
+  - name: Russia
+    code: RU
+  - name: Spain
+    code: ES
+  - name: Sweden
+    code: SE
+  - name: Switzerland
+    code: CH
+  - name: Ukraine
+    code: UA
+  - name: United Kingdom
+    code: GB
+  - name: United States
+    code: US
+  - name: Uruguay
+    code: UY

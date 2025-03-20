@@ -1,0 +1,22 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content %}
+    <div class="container mt-3">
+        <div class="row">
+            {% for link in links %}
+                <div class="col-md-3">
+                    <div class="card mb-3 shadow-sm">
+                        <div class="card-body text-center">
+                            <a href="{{ link.url }}" >
+                                <i class="{{ link.icon }}  mt-2 fa-2x"></i>
+                                <h5 class="card-title mt-2">
+                                    {{ link.title }}
+                                </h5>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
