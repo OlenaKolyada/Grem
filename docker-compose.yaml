@@ -28,7 +28,9 @@ services:
 
   # Symfony apache project container
   www:
-    build: docker/backend
+    build:
+      context: ./backend
+      dockerfile: ../docker/backend/Dockerfile
     container_name: grem_symfony
     ports:
       - "80:80"
@@ -42,7 +44,9 @@ services:
 
   # React / Next.js frontend container
   frontend:
-    build: docker/frontend
+    build:
+      context: ./frontend
+      dockerfile: ../docker/frontend/Dockerfile
     container_name: grem_frontend
     ports:
       - "3000:3000"

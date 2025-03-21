@@ -5,8 +5,9 @@ import type { Metadata } from 'next';
 import { generateItemMetadata } from '@/app/lib/utils';
 import { fetchEntityBySlug } from "@/app/lib/fetch";
 import {META_ENTITIES} from "@/app/lib/config";
+import { PageParams } from "@/app/lib/types/page-params";
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: PageParams): Promise<Metadata> {
   const entity = await fetchEntityBySlug("game", params.slug);
   if (!entity) {
     return {
@@ -20,7 +21,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   });
 }
 
-export default async function Page({ params }: { params: { slug: string } }) {
+export default async function Page({ params }: PageParams) {
   if (!params || !params.slug) {
     notFound();
     return null;
