@@ -27,7 +27,7 @@ services:
       - grem
 
   # Symfony apache project container
-  www:
+  backend:
     build:
       context: ./backend
       dockerfile: ../docker/backend/Dockerfile
@@ -55,7 +55,7 @@ services:
     networks:
       - grem
     depends_on:
-      - www
+      - backend
 
 networks:
   grem:
