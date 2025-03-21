@@ -20,14 +20,15 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   });
 }
 
-// Обновляем тип интерфейса в соответствии с Next.js 15
-interface PageProps {
+// Используем прямую типизацию из Next.js, которая подходит для версии 15
+type Props = {
   params: { slug: string }
-  searchParams?: Record<string, string | string[] | undefined>
+  searchParams?: { [key: string]: string | string[] | undefined }
 }
 
-// Используем новый интерфейс
-export default async function Page({ params }: PageProps) {
+export default async function Page(props: Props) {
+  const { params } = props;
+
   if (!params || !params.slug) {
     notFound();
     return null;
