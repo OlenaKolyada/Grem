@@ -4,7 +4,7 @@ import { CoreEntityContainer } from "@/app/components/entity";
 import type { Metadata } from 'next';
 import { generateItemMetadata } from '@/app/lib/utils';
 import { fetchEntityBySlug } from "@/app/lib/fetch";
-import {META_ENTITIES} from "@/app/lib/config";
+import { META_ENTITIES } from "@/app/lib/config";
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const entity = await fetchEntityBySlug("game", params.slug);
@@ -20,7 +20,14 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   });
 }
 
-export default async function Page({ params }: { params: { slug: string } }) {
+// Обновляем тип интерфейса в соответствии с Next.js 15
+interface PageProps {
+  params: { slug: string }
+  searchParams?: Record<string, string | string[] | undefined>
+}
+
+// Используем новый интерфейс
+export default async function Page({ params }: PageProps) {
   if (!params || !params.slug) {
     notFound();
     return null;
