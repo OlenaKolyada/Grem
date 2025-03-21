@@ -2,20 +2,23 @@ services:
   # Mysql database container
   db:
     image: mysql
-    container_name: grem_db_symfony
+    container_name: db
     restart: always
     volumes:
       - db-data:/var/lib/mysql
     environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
       MYSQL_DATABASE: grem
+      MYSQL_USER: gremu
+      MYSQL_PASSWORD: gremp
+      MYSQL_ROOT_PASSWORD: grem1
+
     networks:
       - grem
 
   # phpmyadmin container
   phpmyadmin:
     image: phpmyadmin
-    container_name: grem_phpmyadmin
+    container_name: phpmyadmin
     restart: always
     depends_on:
       - db
@@ -31,12 +34,17 @@ services:
     build:
       context: ./backend
       dockerfile: ../docker/backend/Dockerfile
-    container_name: grem_symfony
+    container_name: backend
+    environment:
+      APP_ENV: prod
+      DATABASE_URL: "mysql://gremu:gremp@db:3306/grem?charset=utf8mb4"
+    depends_on:
+      - db
     ports:
-      - "80:80"
-#    volumes:
-#      - ./docker/backend/vhosts:/etc/apache2/sites-enabled
-#      - ./:/var/www
+      - "8001:80"
+    volumes:
+     - ./docker/backend/vhosts:/etc/apache2/sites-enabled
+     - ./backend:/var/www
     restart: always
     networks:
       - grem
@@ -47,9 +55,11 @@ services:
     build:
       context: ./frontend
       dockerfile: ../docker/frontend/Dockerfile
-    container_name: grem_frontend
+    container_name: frontend
+    environment:
+      NEXT_PUBLIC_API_URL: "backend"
     ports:
-      - "3000:3000"
+      - "80:3000"
 #    volumes:
 #      - ./frontend:/app
     networks:

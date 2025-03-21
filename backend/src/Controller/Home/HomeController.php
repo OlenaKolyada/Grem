@@ -13,6 +13,8 @@ class HomeController extends AbstractController
     {
         return $this->render('home/index.html.twig', [
             'project_name' => 'Grem',
+            'db_url' => $_ENV['DATABASE_URL'],
+            'app_env' => $_ENV['APP_ENV']
         ]);
     }
 }
