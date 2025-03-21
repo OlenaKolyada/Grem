@@ -11,7 +11,7 @@ import {
 interface MetaEntityCardProps {
     entityItem: Entity;
     categoryName: string;
-    entityFields?: { label: string; value: string; }[];
+    entityFields?: { label: string; value: keyof Entity; }[];
 }
 
 export function MetaEntityUi({

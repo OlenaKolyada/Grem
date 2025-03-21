@@ -12,6 +12,7 @@ export type Entity = {
   country?: string;
   website?: string;
   ageRating?: t.AgeRatingEnum;
+  gameRating?: number;
   releaseDateWorld?: string;
   releaseDateFrance?: string;
   platformRequirementsLevel?: t.PlatformRequirementsLevelEnum;

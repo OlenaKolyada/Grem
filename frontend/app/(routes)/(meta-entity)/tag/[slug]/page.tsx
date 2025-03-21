@@ -1,25 +1,32 @@
 import { notFound } from "next/navigation";
-import {fetchBySlug, fetchEntityBySlug} from "@/app/lib/fetch";
+import { fetchBySlug } from "@/app/lib/fetch/fetchBySlug";
 import { MetaEntityContainer } from "@/app/components/entity";
 import type { Metadata } from 'next';
 import { generateItemMetadata } from '@/app/lib/utils';
+import { fetchEntityBySlug } from "@/app/lib/fetch";
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const entity = await fetchEntityBySlug("tag", params.slug);
+export async function generateMetadata(props: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await props.params;
+  const entity = await fetchEntityBySlug("tag", slug);
+
   if (!entity) {
-    return {
-      title: 'Not Found'
-    };
+    return { title: "Not Found" };
   }
 
   return generateItemMetadata({
     categoryName: "tag",
-    itemTitle: entity.title
+    itemTitle: entity.title,
   });
 }
 
-export default async function Page({ params }: { params: { slug: string } }) {
-  const entityId = await fetchBySlug("tag", params.slug);
+export default async function Page(props: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await props.params;
+
+  const entityId = await fetchBySlug("tag", slug);
 
   if (!entityId) {
     notFound();

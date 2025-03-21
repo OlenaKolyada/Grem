@@ -5,28 +5,33 @@ import type { Metadata } from 'next';
 import { generateItemMetadata } from '@/app/lib/utils';
 import { fetchEntityBySlug } from "@/app/lib/fetch";
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const entity = await fetchEntityBySlug("platform", params.slug);
+export async function generateMetadata(props: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await props.params;
+  const entity = await fetchEntityBySlug("platform", slug);
+
   if (!entity) {
-    return {
-      title: 'Not Found'
-    };
+    return { title: "Not Found" };
   }
 
   return generateItemMetadata({
     categoryName: "platform",
-    itemTitle: entity.title
+    itemTitle: entity.title,
   });
 }
 
-export default async function Page({ params }: { params: { slug: string } }) {
-  const entityId = await fetchBySlug("platform", params.slug);
+export default async function Page(props: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await props.params;
+
+  const entityId = await fetchBySlug("platform", slug);
 
   if (!entityId) {
     notFound();
     return null;
   }
-
   return (
       <MetaEntityContainer
           categoryName="platform"

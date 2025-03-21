@@ -10,7 +10,7 @@ interface ProfileProps {
 
 export function ProfileUi({ user }: ProfileProps) {
 
-    const userFields = [
+    const userFields: { label: string; value: keyof User }[] = [
         { label: "ID", value: "id" },
         { label: "Nickname", value: "nickname" },
         { label: "Email", value: "email" },

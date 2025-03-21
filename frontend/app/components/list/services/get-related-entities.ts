@@ -7,7 +7,7 @@ export function getRelatedEntities(
 ): Entity[] {
     if (!entity || !relatedCategoryName) return [];
 
-    const value = (entity as Record<string, any>)[relatedCategoryName];
+    const value = (entity as Record<string, unknown>)[relatedCategoryName];
     if (Array.isArray(value)) {
         return value;
     }

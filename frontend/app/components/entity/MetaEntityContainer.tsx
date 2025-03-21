@@ -11,7 +11,7 @@ import { useState, useEffect } from "react";
 interface MetaEntityPageProps {
     categoryName: string;
     queryParams?: Record<string, string>;
-    entityFields?: { label: string; value: string; }[];
+    entityFields?: { label: string; value: keyof Entity; }[];
     relatedCategoryNames: string[];
 }
 
@@ -44,7 +44,7 @@ export function MetaEntityContainer({
     if (error || !entityItem) return <p>Entity not found.</p>;
 
     const relatedEntities = relatedCategoryNames.flatMap(category => {
-        const items = (entityItem as Record<string, any>)[category];
+        const items = (entityItem as Record<string, unknown>)[category];
         return Array.isArray(items) ? items.map(item => ({
             ...item,
             _categoryName: category

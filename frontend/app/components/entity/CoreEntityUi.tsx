@@ -13,7 +13,7 @@ import { EntityImage, EntityFields } from "@/app/ui/elements";
 // Функция для получения мета-сущностей
 function getMetaEntities(entity: Entity, categoryName: string): Entity[] {
     if (!entity || !categoryName) return [];
-    const value = (entity as any)[categoryName];
+    const value = (entity as Record<string, unknown>)[categoryName];
     if (Array.isArray(value)) {
         return value;
     }
@@ -23,7 +23,8 @@ function getMetaEntities(entity: Entity, categoryName: string): Entity[] {
 interface CoreEntityCardProps {
     entityItem: Entity;
     categoryName: string;
-    entityFields?: { label: string; value: string; }[];
+    entityFields?: { label: string; value: keyof Entity; }[];
+
     relatedCoreCategories?: string[];
     relatedMetaCategories?: string[];
 }

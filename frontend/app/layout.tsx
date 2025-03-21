@@ -5,6 +5,7 @@ import { roboto } from '@/app/ui/fonts/fonts';
 import { Header, Footer } from '@/app/ui/elements';
 import { Providers } from '@/app/providers';
 import { SideMenuContainer } from "@/app/components/menu";
+import {Suspense} from "react";
 
 
 export const metadata: Metadata = {
@@ -25,7 +26,9 @@ export default function RootLayout({
             <div className="flex flex-col flex-grow">
                 <Header/>
                 <div className="flex flex-grow min-h-0">
+                    <Suspense fallback={<div></div>}>
                     <SideMenuContainer/>
+                    </Suspense>
                     <main className="flex-grow flex flex-col ">{children}</main>
                 </div>
             </div>

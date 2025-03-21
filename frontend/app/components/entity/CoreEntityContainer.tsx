@@ -13,7 +13,7 @@ interface CoreEntityPageProps {
     queryParams?: Record<string, string>;
     relatedMetaCategories?: string[];
     relatedCoreCategories?: string[];
-    entityFields?: { label: string; value: string; }[];
+    entityFields?: { label: string; value: keyof Entity; }[];
 }
 
 export function CoreEntityContainer({

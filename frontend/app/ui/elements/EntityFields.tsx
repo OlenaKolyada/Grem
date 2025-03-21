@@ -1,5 +1,4 @@
 import React from 'react';
-import { Entity } from '@/app/lib/types';
 import { formatFieldValue } from '@/app/lib/utils';
 
 interface WebsiteProps {
@@ -28,40 +27,42 @@ export function EntityWebsite({
     );
 }
 
-interface EntityField {
+export interface EntityField<T extends object> {
     label: string;
-    value: string;
-    formatter?: (value: any) => string | React.ReactNode;
+    value: keyof T;
+    formatter?: (value: unknown) => string | React.ReactNode;
 }
 
-interface EntityFieldsProps {
-    entityItem: Entity;
-    entityFields: EntityField[];
+export interface EntityFieldsProps<T extends object> {
+    entityItem: T;
+    entityFields: EntityField<T>[];
     className?: string;
     contentClassName?: string;
 }
 
-export function EntityFields({
-                                 entityItem,
-                                 entityFields,
-                                 className = "mb-2",
-                                 contentClassName = "mb-4"
-                             }: EntityFieldsProps) {
+export function EntityFields<T extends object>({
+                                                   entityItem,
+                                                   entityFields,
+                                                   className = "mb-2",
+                                                   contentClassName = "mb-4"
+                                               }: EntityFieldsProps<T>) {
+    const content = (entityItem as Record<string, unknown>)["content"];
+    const website = (entityItem as Record<string, unknown>)["website"];
+
     return (
         <>
-            {entityItem.content && (
-                <p className={contentClassName}>{entityItem.content}</p>
+            {typeof content === 'string' && (
+                <p className={contentClassName}>{content}</p>
             )}
 
-            {entityFields?.map(({ label, value, formatter }) => {
-                const fieldValue = entityItem[value];
+            {entityFields.map(({ label, value, formatter }) => {
+                const rawValue = entityItem[value];
 
-                if (fieldValue === undefined || fieldValue === null) return null;
+                if (rawValue === undefined || rawValue === null) return null;
 
-                // Используем пользовательский форматтер если он есть, иначе стандартный
                 const displayValue = formatter
-                    ? formatter(fieldValue)
-                    : formatFieldValue(fieldValue, value);
+                    ? formatter(rawValue)
+                    : formatFieldValue(rawValue, String(value));
 
                 return (
                     <p key={label} className={className}>
@@ -70,8 +71,8 @@ export function EntityFields({
                 );
             })}
 
-            {entityItem.website && (
-                <EntityWebsite website={entityItem.website} />
+            {typeof website === 'string' && (
+                <EntityWebsite website={website} />
             )}
         </>
     );

@@ -8,7 +8,7 @@ export function formatRole(role: string): string {
     return roleMap[role] || role;
 }
 
-export const formatFieldValue = (fieldValue: any, fieldName?: string): React.ReactNode => {
+export const formatFieldValue = (fieldValue: unknown, fieldName?: string): React.ReactNode => {
 
     if (fieldValue instanceof Date) {
         return fieldValue.toLocaleDateString('en-GB');
@@ -19,6 +19,7 @@ export const formatFieldValue = (fieldValue: any, fieldName?: string): React.Rea
         try {
             return new Date(fieldValue).toLocaleDateString('en-GB');
         } catch (e) {
+            console.error(e);
         }
     }
 
@@ -34,7 +35,7 @@ export const formatFieldValue = (fieldValue: any, fieldName?: string): React.Rea
         return JSON.stringify(fieldValue);
     }
 
-    return fieldValue;
+    return fieldValue as React.ReactNode;
 };
 
 export function capitalizeFirstLetter(str: string): string {
