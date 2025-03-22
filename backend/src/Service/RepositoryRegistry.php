@@ -12,11 +12,11 @@ class RepositoryRegistry
     private array $repositories = [];
 
     public function __construct(
-        private NewsRepository $newsRepository,
-        private ReviewRepository $reviewRepository,
-        private GameRepository $gameRepository
+        private readonly NewsRepository   $newsRepository,
+        private readonly ReviewRepository $reviewRepository,
+        private readonly GameRepository $gameRepository
     ) {
-        // Инициализация маппинга категорий и репозиториев
+
         $this->repositories = [
             'news' => $this->newsRepository,
             'review' => $this->reviewRepository,

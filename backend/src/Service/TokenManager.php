@@ -18,13 +18,10 @@ readonly class TokenManager
 
     public function createToken(User $user): UserToken
     {
-        // Создаем JWT токен
         $jwtToken = $this->jwtManager->create($user);
 
-        // Создаем уникальный sessionId
         $sessionId = Uuid::v4()->toRfc4122();
 
-        // Создаем запись о токене
         $userToken = new UserToken();
         $userToken->setUser($user);
         $userToken->setToken($jwtToken);
@@ -32,7 +29,6 @@ readonly class TokenManager
         $userToken->setExpiresAt(new \DateTime('+1 day'));
         $userToken->setRevoked(false);
 
-        // Сохраняем в БД
         $this->entityManager->persist($userToken);
         $this->entityManager->flush();
 

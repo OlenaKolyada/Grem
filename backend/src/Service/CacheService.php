@@ -24,7 +24,13 @@ readonly class CacheService
     ): string {
         return $this->cache->get(
             $idCache,
-            function (ItemInterface $item) use ($tag, $dataFetcher, $serializationGroup, $ignoredAttributes, $expiration) {
+            function (ItemInterface $item) use (
+                $tag,
+                $dataFetcher,
+                $serializationGroup,
+                $ignoredAttributes,
+                $expiration
+            ) {
                 $item->tag($tag);
                 $item->expiresAfter($expiration);
 

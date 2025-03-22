@@ -3,6 +3,9 @@
 namespace App\DataFixtures;
 
 use App\Entity\News;
+use App\Entity\User;
+use App\Entity\Tag;
+use App\Entity\Game;
 use App\Enum\StatusEnum;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -13,34 +16,28 @@ use Symfony\Component\String\Slugger\AsciiSlugger;
 class NewsFixtures extends Fixture implements DependentFixtureInterface
 {
     use EntityHelperTrait;
+
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create();
         $slugger = new AsciiSlugger();
 
-        // Другие статусы, которые нужно распределить
         $otherStatuses = [
             StatusEnum::Draft,
             StatusEnum::Deleted,
             StatusEnum::Archived
         ];
 
-        // Перемешиваем, чтобы распределение было случайным
         shuffle($otherStatuses);
 
         for ($i = 0; $i < 30; $i++) {
             $news = new News();
 
-            // Первые 22 новости получают статус Published
             if ($i < 22) {
                 $status = StatusEnum::Published;
-            }
-            // Следующие 3 новости получают оставшиеся статусы (по одному каждого)
-            elseif ($i < 25) {
+            } elseif ($i < 25) {
                 $status = $otherStatuses[$i - 22];
-            }
-            // Остальные 5 новостей получают случайные статусы
-            else {
+            } else {
                 $status = $faker->randomElement([
                     StatusEnum::Draft,
                     StatusEnum::Deleted,
@@ -51,7 +48,6 @@ class NewsFixtures extends Fixture implements DependentFixtureInterface
             $title = ucwords(rtrim($faker->sentence(), '.'));
             $slug = strtolower($slugger->slug($title));
 
-            // Создаем случайные даты
             $createdAt = $faker->dateTimeBetween('2025-01-01', '2025-03-01');
             $updatedDays = $faker->numberBetween(1, 30);
             $updatedAt = (clone $createdAt)->modify("+$updatedDays days");
@@ -60,14 +56,18 @@ class NewsFixtures extends Fixture implements DependentFixtureInterface
                 ->setTitle($title)
                 ->setStatus($status)
                 ->setSlug($slug)
-                ->setAuthor($this->getReference('user_' . rand(1, 5)))
+                ->setAuthor($this->getReference('user_' . rand(1, 5), User::class))
                 ->setContent($content = $faker->paragraphs(3, true))
                 ->setSummary(mb_substr($content, 0, 150) . '...')
                 ->setCover('cover.jpg')
                 ->setCreatedAt($createdAt)
                 ->setUpdatedAt($updatedAt);
 
-            $entityTypes = ['tag', 'game'];
+            // ✅ Исправлено: ключи соответствуют методам (addTag, addGame)
+            $entityTypes = [
+                'tag' => Tag::class,
+                'game' => Game::class,
+            ];
             $this->addRandomEntities($manager, $news, $entityTypes);
 
             $manager->persist($news);

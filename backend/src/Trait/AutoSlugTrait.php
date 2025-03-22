@@ -6,9 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait AutoSlugTrait
 {
-    /**
-     * Автоматически генерирует slug из title, если slug не задан
-     */
     #[ORM\PrePersist]
     #[ORM\PreUpdate]
     public function generateSlugFromTitle(): void

@@ -10,6 +10,7 @@ class CollectionFieldHandler extends AbstractFieldHandler
         private readonly FieldErrorHandler $errorHandler
     ) {
     }
+
     // ManyToMany or OneToMany
     public function supports(string $fieldType): bool
     {

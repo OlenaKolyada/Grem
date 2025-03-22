@@ -3,6 +3,10 @@
 namespace App\DataFixtures;
 
 use App\Entity\Game;
+use App\Entity\Developer;
+use App\Entity\Publisher;
+use App\Entity\Genre;
+use App\Entity\Platform;
 use App\Enum\AgeRatingEnum;
 use App\Enum\PlatformRequirementsLevelEnum;
 use App\Enum\StatusEnum;
@@ -11,41 +15,34 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Faker\Factory;
-use Random\RandomException;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 
 class GameFixtures extends Fixture implements DependentFixtureInterface
 {
     use EntityHelperTrait;
+
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create();
         $languages = ['en', 'fr', 'ru'];
         $slugger = new AsciiSlugger();
 
-        // Другие статусы, которые нужно распределить
         $otherStatuses = [
             StatusEnum::Draft,
             StatusEnum::Deleted,
             StatusEnum::Archived
         ];
 
-        // Перемешиваем, чтобы распределение было случайным
         shuffle($otherStatuses);
 
         for ($i = 0; $i < 30; $i++) {
             $game = new Game();
 
-            // Первые 22 игры получают статус Published
             if ($i < 22) {
                 $status = StatusEnum::Published;
-            }
-            // Следующие 3 игры получают оставшиеся статусы (по одному каждого)
-            elseif ($i < 25) {
+            } elseif ($i < 25) {
                 $status = $otherStatuses[$i - 22];
-            }
-            // Остальные 5 игр получают случайные статусы
-            else {
+            } else {
                 $status = $faker->randomElement([
                     StatusEnum::Draft,
                     StatusEnum::Deleted,
@@ -56,7 +53,6 @@ class GameFixtures extends Fixture implements DependentFixtureInterface
             $title = ucwords($faker->words(2, true));
             $slug = strtolower($slugger->slug($title));
 
-            // Создаем случайные даты
             $createdAt = $faker->dateTimeBetween('2025-01-01', '2025-03-01');
             $updatedDays = $faker->numberBetween(1, 30);
             $updatedAt = (clone $createdAt)->modify("+$updatedDays days");
@@ -77,12 +73,20 @@ class GameFixtures extends Fixture implements DependentFixtureInterface
                 ->setCreatedAt($createdAt)
                 ->setUpdatedAt($updatedAt);
 
-            $entityTypes = ['developer', 'publisher', 'genre', 'platform'];
+            // ✅ Правильно указаны ключи
+            $entityTypes = [
+                'developer' => Developer::class,
+                'publisher' => Publisher::class,
+                'genre' => Genre::class,
+                'platform' => Platform::class,
+            ];
+
             $this->addRandomEntities($manager, $game, $entityTypes);
 
             $manager->persist($game);
             $this->addReference('game_' . $i, $game);
         }
+
         $manager->flush();
     }
 

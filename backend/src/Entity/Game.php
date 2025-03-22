@@ -16,7 +16,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: GameRepository::class)]
-#[ORM\HasLifecycleCallbacks]
+//#[ORM\HasLifecycleCallbacks]
 #[UniqueEntity(fields: ['title'], message: 'Title should be unique.')]
 #[UniqueEntity(fields: ['slug'], message: 'Slug should be unique.')]
 class Game
@@ -567,32 +567,32 @@ class Game
         return $this;
     }
 
-    #[ORM\PreUpdate]
-    public function onPreUpdate(): void
-    {
-        $this->updatedAt = new \DateTime();
-    }
-
-    #[ORM\PrePersist]
-    public function onPrePersist(): void
-    {
-        $this->createdAt = new \DateTime();
-        $this->updatedAt = new \DateTime();
-    }
-
-//    public function setCreatedAt(\DateTimeInterface $createdAt): static
+//    #[ORM\PreUpdate]
+//    public function onPreUpdate(): void
 //    {
-//        $this->createdAt = $createdAt;
-//
-//        return $this;
+//        $this->updatedAt = new \DateTime();
 //    }
 //
-//    public function setUpdatedAt(\DateTimeInterface $updatedAt): static
+//    #[ORM\PrePersist]
+//    public function onPrePersist(): void
 //    {
-//        $this->updatedAt = $updatedAt;
-//
-//        return $this;
+//        $this->createdAt = new \DateTime();
+//        $this->updatedAt = new \DateTime();
 //    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
 
     public function __toString(): string
     {

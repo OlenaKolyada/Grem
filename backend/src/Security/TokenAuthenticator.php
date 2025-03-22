@@ -22,7 +22,6 @@ class TokenAuthenticator extends AbstractAuthenticator implements Authentication
 
     public function supports(Request $request): ?bool
     {
-        // Применяем аутентификатор только если есть сессионная кука
         return $request->cookies->has('session_id');
     }
 
@@ -34,14 +33,12 @@ class TokenAuthenticator extends AbstractAuthenticator implements Authentication
             throw new AuthenticationException('No session id found');
         }
 
-        // Валидируем токен
         $userToken = $this->tokenManager->validateToken($sessionId);
 
         if (!$userToken) {
             throw new AuthenticationException('Invalid session');
         }
 
-        // Создаем паспорт с идентификатором пользователя
         return new SelfValidatingPassport(
             new UserBadge($userToken->getUser()->getUserIdentifier())
         );
@@ -66,7 +63,6 @@ class TokenAuthenticator extends AbstractAuthenticator implements Authentication
     }
 
 
-    // Реализация интерфейса AuthenticationEntryPointInterface
     public function start(Request $request, AuthenticationException $authException = null): Response
     {
         return new JsonResponse(['error' => 'Authentication required'], Response::HTTP_UNAUTHORIZED);

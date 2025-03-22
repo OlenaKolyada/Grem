@@ -5,12 +5,13 @@ use App\Service\EntityField\FieldTypeDetector;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 class RelationFieldHandler extends AbstractFieldHandler
 {
-    // ManyToOne
     public function __construct(
         private readonly FieldTypeDetector $fieldTypeDetector,
         private readonly FieldErrorHandler $errorHandler
     ) {
     }
+
+    // ManyToOne
     public function supports(string $fieldType): bool
     {
         return in_array($fieldType, ['entity', 'relation', 'manytoone']);

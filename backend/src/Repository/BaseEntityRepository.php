@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
-abstract class BaseEntityRepository extends ServiceEntityRepository implements LatestEntityInterface
+abstract class BaseEntityRepository extends ServiceEntityRepository
 {
     public function findByWithPagination(array $criteria, int $page, int $limit): array
     {
@@ -37,11 +37,6 @@ abstract class BaseEntityRepository extends ServiceEntityRepository implements L
         ];
     }
 
-    /**
-     * Находит последний опубликованный элемент
-     *
-     * @return object|null
-     */
     public function findLatest(): ?object
     {
         return $this->createQueryBuilder('e')

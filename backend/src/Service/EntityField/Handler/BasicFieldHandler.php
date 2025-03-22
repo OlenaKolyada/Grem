@@ -30,7 +30,7 @@ class BasicFieldHandler extends AbstractFieldHandler
         $success = true;
 
         foreach ($fieldNames as $fieldName) {
-            // Пропускаем поля, если они не должны обрабатываться этим обработчиком
+
             if ($this->fieldTypeDetector->isDateField($entity, $fieldName) ||
                 $this->fieldTypeDetector->isEnumField($entity, $fieldName) ||
                 $this->fieldTypeDetector->isCollectionField($entity, $fieldName) ||
@@ -39,7 +39,6 @@ class BasicFieldHandler extends AbstractFieldHandler
                 continue;
             }
 
-            // Проверяем обязательность поля
             $fieldValid = $this->validateRequiredField(
                 $entity,
                 $data,
@@ -55,7 +54,6 @@ class BasicFieldHandler extends AbstractFieldHandler
                 continue;
             }
 
-            // Устанавливаем значение поля
             $setter = 'set' . ucfirst($fieldName);
             if (method_exists($entity, $setter)) {
                 $entity->$setter($data[$fieldName]);

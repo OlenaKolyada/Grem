@@ -3,18 +3,16 @@
 namespace App\DataFixtures;
 
 use Doctrine\Persistence\ObjectManager;
-use Random\RandomException;
 
 trait EntityHelperTrait
 {
-
     protected function addRandomEntities(ObjectManager $manager, object $entity, array $entityTypes): void
     {
-        foreach ($entityTypes as $entityType) {
-
+        foreach ($entityTypes as $entityType => $class) {
             $availableReferences = [];
             $index = 0;
-            while ($this->hasReference($entityType . '_' . $index)) {
+
+            while ($this->hasReference($entityType . '_' . $index, $class)) {
                 $availableReferences[] = $entityType . '_' . $index;
                 $index++;
             }
@@ -35,7 +33,7 @@ trait EntityHelperTrait
 
             foreach ($selectedReferences as $reference) {
                 try {
-                    $randomEntity = $this->getReference($reference);
+                    $randomEntity = $this->getReference($reference, $class);
                     $entity->$method($randomEntity);
                 } catch (\Exception $e) {
                     throw new \RuntimeException(
