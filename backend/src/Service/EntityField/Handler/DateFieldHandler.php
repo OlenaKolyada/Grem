@@ -2,7 +2,7 @@
 
 namespace App\Service\EntityField\Handler;
 
-use App\Service\EntityField\AbstractFieldHandler;
+use App\Service\EntityField\FieldErrorHandler;
 use App\Service\EntityField\FieldTypeDetector;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
@@ -19,7 +19,8 @@ class DateFieldHandler extends AbstractFieldHandler
     ];
 
     public function __construct(
-        private readonly FieldTypeDetector $fieldTypeDetector
+        private readonly FieldTypeDetector $fieldTypeDetector,
+        private readonly FieldErrorHandler $errorHandler
     ) {
     }
 
@@ -53,7 +54,7 @@ class DateFieldHandler extends AbstractFieldHandler
             // Проверка для обязательных полей
             if ($required && empty($data[$fieldName])) {
                 if ($errors) {
-                    $this->addError(
+                    $this->errorHandler->addError(
                         $entity,
                         $fieldName,
                         $errorMessage ?? ucfirst($fieldName) . ' is required',
@@ -92,7 +93,7 @@ class DateFieldHandler extends AbstractFieldHandler
                 $entity->$setter($date);
             } else {
                 if ($errors) {
-                    $this->addError(
+                    $this->errorHandler->addError(
                         $entity,
                         $fieldName,
                         'Invalid date format for ' . $fieldName . '. Supported formats: DD/MM/YYYY, YYYY-MM-DD, DD.MM.YYYY',

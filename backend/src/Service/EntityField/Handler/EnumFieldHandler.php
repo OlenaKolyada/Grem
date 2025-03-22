@@ -2,14 +2,15 @@
 
 namespace App\Service\EntityField\Handler;
 
-use App\Service\EntityField\AbstractFieldHandler;
+use App\Service\EntityField\FieldErrorHandler;
 use App\Service\EntityField\FieldTypeDetector;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 class EnumFieldHandler extends AbstractFieldHandler
 {
     public function __construct(
-        private readonly FieldTypeDetector $fieldTypeDetector
+        private readonly FieldTypeDetector $fieldTypeDetector,
+        private readonly FieldErrorHandler $errorHandler
     ) {
     }
 
@@ -43,7 +44,7 @@ class EnumFieldHandler extends AbstractFieldHandler
                 if ($required) {
                     // Если поле обязательное, но его нет в данных - ошибка
                     if ($errors) {
-                        $this->addError(
+                        $this->errorHandler->addError(
                             $entity,
                             $fieldName,
                             $errorMessage ?? ucfirst($fieldName) . ' is required',
@@ -94,7 +95,7 @@ class EnumFieldHandler extends AbstractFieldHandler
         // Проверяем наличие обязательного поля
         if ($isRequired && (empty($data[$fieldName]) || !isset($data[$fieldName]))) {
             if ($errors) {
-                $this->addError(
+                $this->errorHandler->addError(
                     $entity,
                     $fieldName,
                     $errorMessage ?? ucfirst($fieldName) . ' is required',
@@ -128,7 +129,7 @@ class EnumFieldHandler extends AbstractFieldHandler
                         return $case->name;
                     }, $cases);
 
-                    $this->addError(
+                    $this->errorHandler->addError(
                         $entity,
                         $fieldName,
                         $errorMessage ?? sprintf(
@@ -149,7 +150,7 @@ class EnumFieldHandler extends AbstractFieldHandler
             return true;
         } catch (\Exception $e) {
             if ($errors) {
-                $this->addError(
+                $this->errorHandler->addError(
                     $entity,
                     $fieldName,
                     "Error processing enum: " . $e->getMessage(),

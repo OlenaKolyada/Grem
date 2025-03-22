@@ -2,14 +2,15 @@
 
 namespace App\Service\EntityField\Handler;
 
-use App\Service\EntityField\AbstractFieldHandler;
+use App\Service\EntityField\FieldErrorHandler;
 use App\Service\EntityField\FieldTypeDetector;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 class RelationFieldHandler extends AbstractFieldHandler
 {
     public function __construct(
-        private readonly FieldTypeDetector $fieldTypeDetector
+        private readonly FieldTypeDetector $fieldTypeDetector,
+        private readonly FieldErrorHandler $errorHandler
     ) {
     }
 
@@ -42,7 +43,7 @@ class RelationFieldHandler extends AbstractFieldHandler
      * @param string|null $errorMessage Сообщение об ошибке
      * @return bool Успешно ли обработано поле
      */
-    public function handleEntityField(
+    public function handleRelationField(
         object $entity,
         array $data,
         string $fieldName,
@@ -59,7 +60,7 @@ class RelationFieldHandler extends AbstractFieldHandler
 
         // Если поле не указано, но обязательное - ошибка
         if (!isset($data[$fieldName]) && $isRequired) {
-            $this->addError(
+            $this->errorHandler->errorHandler->addError(
                 $entity,
                 $fieldName,
                 $errorMessage ?? ucfirst($fieldName) . ' is required',

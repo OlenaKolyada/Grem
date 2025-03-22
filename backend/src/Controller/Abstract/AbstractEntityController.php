@@ -20,16 +20,13 @@ abstract class AbstractEntityController
     ) {
     }
 
-    /**
-     * Обрабатывает поля сущности на основе конфигурации
-     */
     protected function processFieldsFromConfig(
         object $entity,
         array $content,
         array $fieldConfig,
         ConstraintViolationList $validationErrors
     ): void {
-        // Обработка обязательных полей
+
         if (!empty($fieldConfig['required'])) {
             $this->fieldManager->handleFields(
                 $entity,
@@ -40,7 +37,6 @@ abstract class AbstractEntityController
             );
         }
 
-        // Обработка необязательных полей
         if (!empty($fieldConfig['optional'])) {
             $this->fieldManager->handleFields(
                 $entity,
@@ -49,7 +45,6 @@ abstract class AbstractEntityController
             );
         }
 
-        // Обработка отношений
         if (isset($fieldConfig['relations'])) {
             foreach ($fieldConfig['relations'] as $fieldName => $config) {
                 $repository = $config['repository'];
@@ -70,7 +65,7 @@ abstract class AbstractEntityController
                         $config['clearExisting'] ?? true // Передаем настройку очистки
                     );
                 } elseif ($config['type'] === 'entity') {
-                    $this->fieldManager->handleEntityField(
+                    $this->fieldManager->handleRelationField(
                         $entity,
                         $content,
                         $fieldName,

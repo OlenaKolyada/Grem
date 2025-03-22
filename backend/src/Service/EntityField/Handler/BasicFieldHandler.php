@@ -2,14 +2,15 @@
 
 namespace App\Service\EntityField\Handler;
 
-use App\Service\EntityField\AbstractFieldHandler;
 use App\Service\EntityField\FieldTypeDetector;
+use App\Service\EntityField\FieldErrorHandler;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
-class BasicFieldHandler extends AbstractFieldHandler
+class BasicFieldHandler implements FieldHandlerInterface
 {
     public function __construct(
-        private readonly FieldTypeDetector $fieldTypeDetector
+        private readonly FieldTypeDetector $fieldTypeDetector,
+        private readonly FieldErrorHandler $errorHandler
     ) {
     }
 
@@ -41,10 +42,9 @@ class BasicFieldHandler extends AbstractFieldHandler
                 continue;
             }
 
-            // Проверка для обязательных полей
             if ($required && !isset($data[$fieldName])) {
                 if ($errors) {
-                    $this->addError(
+                    $this->errorHandler->addError(
                         $entity,
                         $fieldName,
                         $errorMessage ?? ucfirst($fieldName) . ' is required',

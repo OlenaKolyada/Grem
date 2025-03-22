@@ -10,22 +10,19 @@ use App\Service\EntityField\Handler\EnumFieldHandler;
 use App\Service\EntityField\Handler\RelationFieldHandler;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
-class FieldManager
+readonly class FieldManager
 {
     public function __construct(
-        private readonly BasicFieldHandler      $basicFieldHandler,
-        private readonly EnumFieldHandler       $enumFieldHandler,
-        private readonly RelationFieldHandler   $relationFieldHandler,
-        private readonly CollectionFieldHandler $collectionFieldHandler,
-        private readonly DateFieldHandler       $dateFieldHandler,
-        private readonly ArrayFieldHandler      $arrayFieldHandler,
-        private readonly FieldTypeDetector      $fieldTypeDetector
+        private BasicFieldHandler      $basicFieldHandler,
+        private EnumFieldHandler       $enumFieldHandler,
+        private RelationFieldHandler   $relationFieldHandler,
+        private CollectionFieldHandler $collectionFieldHandler,
+        private DateFieldHandler       $dateFieldHandler,
+        private ArrayFieldHandler      $arrayFieldHandler,
+        private FieldTypeDetector      $fieldTypeDetector
     ) {
     }
 
-    /**
-     * Обрабатывает поля
-     */
     public function handleFields(
         object $entity,
         array $data,
@@ -34,7 +31,7 @@ class FieldManager
         bool $required = false,
         ?string $errorMessage = null
     ): bool {
-        // Разделяем поля по типам
+
         $dateFields = [];
         $enumFields = [];
         $relationFields = [];
@@ -43,7 +40,6 @@ class FieldManager
         $basicFields = [];
 
         foreach ($fieldNames as $fieldName) {
-            // Пробуем получить enum тип напрямую - это наиболее приоритетная проверка
             $enumClass = $this->fieldTypeDetector->isEnumField($entity, $fieldName);
             if ($enumClass) {
                 $enumFields[] = $fieldName;
@@ -63,10 +59,8 @@ class FieldManager
             }
         }
 
-        // Обрабатываем каждый тип полей соответствующим обработчиком
         $success = true;
 
-        // Обрабатываем поля с enum
         if (!empty($enumFields)) {
             $enumResult = $this->enumFieldHandler->handleFields(
                 $entity,
@@ -79,7 +73,6 @@ class FieldManager
             $success = $success && $enumResult;
         }
 
-        // Обрабатываем поля с датами
         if (!empty($dateFields)) {
             $dateResult = $this->dateFieldHandler->handleFields(
                 $entity,
@@ -92,7 +85,6 @@ class FieldManager
             $success = $success && $dateResult;
         }
 
-        // Обрабатываем поля с массивами
         if (!empty($arrayFields)) {
             $arrayResult = $this->arrayFieldHandler->handleFields(
                 $entity,
@@ -105,7 +97,6 @@ class FieldManager
             $success = $success && $arrayResult;
         }
 
-        // Обрабатываем остальные поля
         if (!empty($basicFields)) {
             $basicResult = $this->basicFieldHandler->handleFields(
                 $entity,
@@ -121,9 +112,6 @@ class FieldManager
         return $success;
     }
 
-    /**
-     * Обрабатывает enum поле
-     */
     public function handleEnumField(
         object $entity,
         array $data,
@@ -144,10 +132,7 @@ class FieldManager
         );
     }
 
-    /**
-     * Обрабатывает поле связи с сущностью
-     */
-    public function handleEntityField(
+    public function handleRelationField(
         object $entity,
         array $data,
         string $fieldName,
@@ -157,7 +142,7 @@ class FieldManager
         bool $isRequired = false,
         ?string $errorMessage = null
     ): bool {
-        return $this->relationFieldHandler->handleEntityField(
+        return $this->relationFieldHandler->handleRelationField(
             $entity,
             $data,
             $fieldName,
@@ -169,9 +154,6 @@ class FieldManager
         );
     }
 
-    /**
-     * Обрабатывает поле со связью ManyToMany или OneToMany
-     */
     public function handleCollectionField(
         object $entity,
         array $data,
@@ -196,9 +178,6 @@ class FieldManager
         );
     }
 
-    /**
-     * Обрабатывает поля типа дата
-     */
     public function handleDateFields(
         object $entity,
         array $data,

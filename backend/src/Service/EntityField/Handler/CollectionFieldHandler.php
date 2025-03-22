@@ -2,14 +2,15 @@
 
 namespace App\Service\EntityField\Handler;
 
-use App\Service\EntityField\AbstractFieldHandler;
+use App\Service\EntityField\FieldErrorHandler;
 use App\Service\EntityField\FieldTypeDetector;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 class CollectionFieldHandler extends AbstractFieldHandler
 {
     public function __construct(
-        private readonly FieldTypeDetector $fieldTypeDetector
+        private readonly FieldTypeDetector $fieldTypeDetector,
+        private readonly FieldErrorHandler $errorHandler
     ) {
     }
 
@@ -58,7 +59,7 @@ class CollectionFieldHandler extends AbstractFieldHandler
 
         // Проверка обязательного поля
         if (!isset($data[$fieldName]) && $isRequired) {
-            $this->addError(
+            $this->errorHandler->addError(
                 $entity,
                 $fieldName,
                 $errorMessage ?? ucfirst($fieldName) . ' is required',
@@ -119,7 +120,7 @@ class CollectionFieldHandler extends AbstractFieldHandler
 
             // Проверяем найдена ли сущность
             if ($relatedEntity === null) {
-                $this->addError(
+                $this->errorHandler->addError(
                     $entity,
                     $fieldName,
                     $errorMessage ?? ucfirst($fieldName) . ' entity not found: ' . $value,

@@ -6,11 +6,6 @@ use Doctrine\Common\Collections\Collection;
 
 class FieldTypeDetector
 {
-    /**
-     * Определяет тип поля сущности
-     *
-     * @return string Тип поля: 'enum', 'date', 'collection', 'relation', 'array', 'basic'
-     */
     public function detectFieldType(object $entity, string $fieldName): string
     {
         if ($this->isEnumField($entity, $fieldName)) {
@@ -36,9 +31,6 @@ class FieldTypeDetector
         return 'basic';
     }
 
-    /**
-     * Определяет, является ли поле Enum, и возвращает класс Enum или false
-     */
     public function isEnumField(object $entity, string $fieldName): string|bool
     {
         try {
@@ -54,21 +46,16 @@ class FieldTypeDetector
             if ($type && !$type->isBuiltin()) {
                 $typeName = $type->getName();
 
-                // Проверяем, является ли тип Enum
                 if (\enum_exists($typeName)) {
-                    return $typeName; // Возвращаем имя класса enum
+                    return $typeName;
                 }
             }
         } catch (\Exception $e) {
-            // В случае ошибки просто возвращаем false
         }
 
         return false;
     }
 
-    /**
-     * Определяет, является ли поле типом DateTime
-     */
     public function isDateField(object $entity, string $fieldName): bool
     {
         try {
@@ -88,15 +75,11 @@ class FieldTypeDetector
                     $typeName === \DateTimeImmutable::class;
             }
         } catch (\Exception $e) {
-            // В случае ошибки просто возвращаем false
         }
 
         return false;
     }
 
-    /**
-     * Определяет, является ли поле коллекцией (ManyToMany или OneToMany)
-     */
     public function isCollectionField(object $entity, string $fieldName): bool
     {
         try {
@@ -111,27 +94,22 @@ class FieldTypeDetector
 
             if ($type) {
                 $typeName = $type->getName();
-                // Проверяем, является ли тип коллекцией
+
                 return is_a($typeName, Collection::class, true) ||
-                    strpos($typeName, 'Collection') !== false;
+                    str_contains($typeName, 'Collection');
             }
 
-            // Проверяем наличие методов для работы с коллекцией
             $singularName = rtrim($fieldName, 's');
             $adder = 'add' . ucfirst($singularName);
             $remover = 'remove' . ucfirst($singularName);
 
             return method_exists($entity, $adder) && method_exists($entity, $remover);
         } catch (\Exception $e) {
-            // В случае ошибки просто возвращаем false
         }
 
         return false;
     }
 
-    /**
-     * Определяет, является ли поле отношением с другой сущностью (ManyToOne)
-     */
     public function isRelationField(object $entity, string $fieldName): bool
     {
         try {
@@ -147,7 +125,6 @@ class FieldTypeDetector
             if ($type && !$type->isBuiltin()) {
                 $typeName = $type->getName();
 
-                // Исключаем уже проверенные типы
                 if (\enum_exists($typeName) ||
                     $typeName === \DateTime::class ||
                     $typeName === \DateTimeInterface::class ||
@@ -155,26 +132,19 @@ class FieldTypeDetector
                     return false;
                 }
 
-                // Исключаем коллекции
                 if (is_a($typeName, Collection::class, true) ||
-                    strpos($typeName, 'Collection') !== false) {
+                    str_contains($typeName, 'Collection')) {
                     return false;
                 }
 
-                // Предполагаем, что это отношение с сущностью, если тип не встроенный
-                // и не относится к предыдущим категориям
                 return true;
             }
         } catch (\Exception $e) {
-            // В случае ошибки просто возвращаем false
         }
 
         return false;
     }
 
-    /**
-     * Определяет, является ли поле массивом
-     */
     public function isArrayField(object $entity, string $fieldName): bool
     {
         try {
@@ -189,11 +159,9 @@ class FieldTypeDetector
 
             if ($type) {
                 $typeName = $type->getName();
-                // Проверяем, является ли тип массивом
-                return $typeName === 'array' || strpos($typeName, '[]') !== false;
+                return $typeName === 'array' || str_contains($typeName, '[]');
             }
 
-            // Проверяем наличие методов для работы с массивом
             $singularName = rtrim($fieldName, 's');
             $adder = 'add' . ucfirst($singularName);
 
@@ -203,7 +171,6 @@ class FieldTypeDetector
 
             return method_exists($entity, $adder);
         } catch (\Exception $e) {
-            // В случае ошибки просто возвращаем false
         }
 
         return false;

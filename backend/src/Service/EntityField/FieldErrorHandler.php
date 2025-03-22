@@ -2,16 +2,12 @@
 
 namespace App\Service\EntityField;
 
-use App\Service\EntityField\Handler\FieldHandlerInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
-abstract class AbstractFieldHandler implements FieldHandlerInterface
+class FieldErrorHandler
 {
-    /**
-     * Добавляет ошибку валидации к списку ошибок
-     */
-    protected function addError(
+    public function addError(
         object $entity,
         string $fieldName,
         string $message,
