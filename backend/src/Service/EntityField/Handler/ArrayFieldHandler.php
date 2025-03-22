@@ -36,21 +36,18 @@ class ArrayFieldHandler extends AbstractFieldHandler
 
         foreach ($fieldNames as $fieldName) {
 
-            if ($required && !isset($data[$fieldName])) {
-                if ($errors) {
-                    $this->errorHandler->addError(
-                        $entity,
-                        $fieldName,
-                        $errorMessage ?? ucfirst($fieldName) . ' is required',
-                        null,
-                        $errors
-                    );
-                }
-                $success = false;
-                continue;
-            }
+            $fieldValid = $this->validateRequiredField(
+                $entity,
+                $data,
+                $fieldName,
+                $this->errorHandler,
+                $errors,
+                $required,
+                $errorMessage
+            );
 
-            if (!$required && !isset($data[$fieldName])) {
+            if (!$fieldValid) {
+                $success = false;
                 continue;
             }
 

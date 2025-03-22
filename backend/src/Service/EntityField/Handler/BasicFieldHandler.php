@@ -6,11 +6,11 @@ use App\Service\EntityField\FieldTypeDetector;
 use App\Service\EntityField\FieldErrorHandler;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
-readonly class BasicFieldHandler implements FieldHandlerInterface
+class BasicFieldHandler extends AbstractFieldHandler
 {
     public function __construct(
-        private FieldTypeDetector $fieldTypeDetector,
-        private FieldErrorHandler $errorHandler
+        private readonly FieldTypeDetector $fieldTypeDetector,
+        private readonly FieldErrorHandler $errorHandler
     ) {
     }
 
@@ -30,6 +30,7 @@ readonly class BasicFieldHandler implements FieldHandlerInterface
         $success = true;
 
         foreach ($fieldNames as $fieldName) {
+            // Пропускаем поля, если они не должны обрабатываться этим обработчиком
             if ($this->fieldTypeDetector->isDateField($entity, $fieldName) ||
                 $this->fieldTypeDetector->isEnumField($entity, $fieldName) ||
                 $this->fieldTypeDetector->isCollectionField($entity, $fieldName) ||
@@ -38,24 +39,23 @@ readonly class BasicFieldHandler implements FieldHandlerInterface
                 continue;
             }
 
-            if ($required && !isset($data[$fieldName])) {
-                if ($errors) {
-                    $this->errorHandler->addError(
-                        $entity,
-                        $fieldName,
-                        $errorMessage ?? ucfirst($fieldName) . ' is required',
-                        null,
-                        $errors
-                    );
-                }
+            // Проверяем обязательность поля
+            $fieldValid = $this->validateRequiredField(
+                $entity,
+                $data,
+                $fieldName,
+                $this->errorHandler,
+                $errors,
+                $required,
+                $errorMessage
+            );
+
+            if (!$fieldValid) {
                 $success = false;
                 continue;
             }
 
-            if (!$required && !isset($data[$fieldName])) {
-                continue;
-            }
-
+            // Устанавливаем значение поля
             $setter = 'set' . ucfirst($fieldName);
             if (method_exists($entity, $setter)) {
                 $entity->$setter($data[$fieldName]);

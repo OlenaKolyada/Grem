@@ -36,20 +36,18 @@ class EnumFieldHandler extends AbstractFieldHandler
                 continue;
             }
 
-            if (!array_key_exists($fieldName, $data)) {
-                if ($required) {
+            $fieldValid = $this->validateRequiredField(
+                $entity,
+                $data,
+                $fieldName,
+                $this->errorHandler,
+                $errors,
+                $required,
+                $errorMessage
+            );
 
-                    if ($errors) {
-                        $this->errorHandler->addError(
-                            $entity,
-                            $fieldName,
-                            $errorMessage ?? ucfirst($fieldName) . ' is required',
-                            null,
-                            $errors
-                        );
-                    }
-                    $success = false;
-                }
+            if (!$fieldValid && !array_key_exists($fieldName, $data)) {
+                $success = false;
                 continue;
             }
 
@@ -81,20 +79,17 @@ class EnumFieldHandler extends AbstractFieldHandler
         ?string $errorMessage = null
     ): bool {
 
-        if (!$isRequired && (empty($data[$fieldName]))) {
-            return true;
-        }
+        $fieldValid = $this->validateRequiredField(
+            $entity,
+            $data,
+            $fieldName,
+            $this->errorHandler,
+            $errors,
+            $isRequired,
+            $errorMessage
+        );
 
-        if ($isRequired && (empty($data[$fieldName]))) {
-            if ($errors) {
-                $this->errorHandler->addError(
-                    $entity,
-                    $fieldName,
-                    $errorMessage ?? ucfirst($fieldName) . ' is required',
-                    null,
-                    $errors
-                );
-            }
+        if (!$fieldValid) {
             return false;
         }
 
