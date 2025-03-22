@@ -59,11 +59,10 @@ class NewsFixtures extends Fixture implements DependentFixtureInterface
                 ->setAuthor($this->getReference('user_' . rand(1, 5), User::class))
                 ->setContent($content = $faker->paragraphs(3, true))
                 ->setSummary(mb_substr($content, 0, 150) . '...')
-                ->setCover('cover.jpg')
-                ->setCreatedAt($createdAt)
-                ->setUpdatedAt($updatedAt);
+                ->setCover('cover.jpg');
+//                ->setCreatedAt($createdAt)
+//                ->setUpdatedAt($updatedAt);
 
-            // ✅ Исправлено: ключи соответствуют методам (addTag, addGame)
             $entityTypes = [
                 'tag' => Tag::class,
                 'game' => Game::class,

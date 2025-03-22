@@ -69,11 +69,10 @@ class GameFixtures extends Fixture implements DependentFixtureInterface
                 ->setAgeRating($faker->randomElement(AgeRatingEnum::cases()))
                 ->setCover('cover.jpg')
                 ->setWebsite($faker->url)
-                ->setLanguage($faker->randomElements($languages, $faker->numberBetween(1, 3)))
-                ->setCreatedAt($createdAt)
-                ->setUpdatedAt($updatedAt);
+                ->setLanguage($faker->randomElements($languages, $faker->numberBetween(1, 3)));
+//                ->setCreatedAt($createdAt)
+//                ->setUpdatedAt($updatedAt);
 
-            // ✅ Правильно указаны ключи
             $entityTypes = [
                 'developer' => Developer::class,
                 'publisher' => Publisher::class,

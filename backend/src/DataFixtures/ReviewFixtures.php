@@ -61,9 +61,9 @@ class ReviewFixtures extends Fixture implements DependentFixtureInterface
                 ->setContent($content = $faker->paragraphs(3, true))
                 ->setSummary(mb_substr($content, 0, 150) . '...')
                 ->setCover('cover.jpg')
-                ->setGameRating(rand(1, 10))
-                ->setCreatedAt($createdAt)
-                ->setUpdatedAt($updatedAt);
+                ->setGameRating(rand(1, 10));
+//                ->setCreatedAt($createdAt)
+//                ->setUpdatedAt($updatedAt);
 
             $entityTypes = [
                 'tag' => Tag::class,
