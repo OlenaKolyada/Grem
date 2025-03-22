@@ -68,12 +68,12 @@ class UpdateDeveloperAction extends AbstractEntityController
             mediaType: "application/json",
             schema: new OA\Schema(
                 properties: [
-                    new OA\Property(property: "title",type: "string", example: "Must be unique"),
+                    new OA\Property(property: "title", type: "string", example: "Edited Unique Developer"),
                     new OA\Property(property: "slug", type: "string", example: ""),
-                    new OA\Property(property: "country", type: "string"),
-                    new OA\Property(property: "website", type: "string", example: "https://example.com"),
+                    new OA\Property(property: "country", type: "string", example: "Finland"),
+                    new OA\Property(property: "website", type: "string", example: "https://new-example.com"),
                     new OA\Property(property: "game", type: "array",
-                        items: new OA\Items(type: "string"), example: ["ID1", "ID2"])
+                        items: new OA\Items(type: "string"), example: ["3", "4"])
                 ])))]
     #[OA\Tag(name: "Developer")]
     #[Security(name: "bearerAuth")]

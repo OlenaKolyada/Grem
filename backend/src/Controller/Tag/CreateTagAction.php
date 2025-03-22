@@ -65,12 +65,12 @@ class CreateTagAction extends AbstractEntityController
         mediaType: "application/json",
         schema: new OA\Schema(required: ["title"],
             properties: [
-                new OA\Property(property: "title", type: "string", example: "Must be unique"),
+                new OA\Property(property: "title", type: "string", example: "UniqueTitle"),
                 new OA\Property(property: "slug", type: "string", example: ""),
                 new OA\Property(property: "news", type: "array",
-                    items: new OA\Items(type: "string"), example: ["ID1", "ID2"]),
+                    items: new OA\Items(type: "string"), example: ["1", "2"]),
                 new OA\Property(property: "review", type: "array",
-                    items: new OA\Items(type: "string"), example: ["ID1", "ID2"])
+                    items: new OA\Items(type: "string"), example: ["1", "2"])
             ])))]
     #[OA\Tag(name: "Tag")]
     #[Security(name: "bearerAuth")]

@@ -68,10 +68,10 @@ class UpdateGenreAction extends AbstractEntityController
             mediaType: "application/json",
             schema: new OA\Schema(
                 properties: [
-                    new OA\Property(property: "title",type: "string", example: "Must be unique"),
+                    new OA\Property(property: "title", type: "string", example: "Edited Unique Title"),
                     new OA\Property(property: "slug", type: "string", example: ""),
                     new OA\Property(property: "game", type: "array",
-                        items: new OA\Items(type: "string"), example: ["ID1", "ID2"])
+                        items: new OA\Items(type: "string"), example: ["3", "4"])
                 ])))]
     #[OA\Tag(name: "Genre")]
     #[Security(name: "bearerAuth")]

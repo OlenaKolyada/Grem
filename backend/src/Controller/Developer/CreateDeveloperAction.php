@@ -57,12 +57,12 @@ class CreateDeveloperAction extends AbstractEntityController
         mediaType: "application/json",
         schema: new OA\Schema(required: ["title"],
             properties: [
-                new OA\Property(property: "title", type: "string", example: "Must be unique"),
+                new OA\Property(property: "title", type: "string", example: "Unique Developer"),
                 new OA\Property(property: "slug", type: "string", example: ""),
-                new OA\Property(property: "country", type: "string"),
+                new OA\Property(property: "country", type: "string", example: "Spain"),
                 new OA\Property(property: "website", type: "string", example: "https://example.com"),
                 new OA\Property(property: "game", type: "array",
-                    items: new OA\Items(type: "string"), example: ["ID1", "ID2"])
+                    items: new OA\Items(type: "string"), example: ["1", "2"])
             ])))]
     #[OA\Tag(name: "Developer")]
     #[Security(name: "bearerAuth")]

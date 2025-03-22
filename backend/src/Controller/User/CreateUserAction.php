@@ -79,19 +79,19 @@ class CreateUserAction extends AbstractEntityController
             schema: new OA\Schema(
                 required: ["nickname", "email", "password", "roles"],
                 properties: [
-                    new OA\Property(property: "nickname", type: "string", example: "Must be unique"),
+                    new OA\Property(property: "nickname", type: "string", example: "Unique Nickname"),
                     new OA\Property(property: "email", type: "string", example: "must_be_unique@gmail.com"),
                     new OA\Property(property: "password", type: "string", example: "password"),
                     new OA\Property(property: "roles", type: "array",
-                        items: new OA\Items(type: "string"), example: ["ROLE_USER"]),
+                        items: new OA\Items(type: "string"), example: ["ROLE_ADMIN"]),
                     new OA\Property(property: "twitchAccount", type: "string", example: "https://twitch.com/user"),
                     new OA\Property(property: "avatar", type: "string", example: "avatar.jpg"),
                     new OA\Property(property: "news", type: "array",
-                        items: new OA\Items(type: "string"), example: ["ID1", "ID2"]),
+                        items: new OA\Items(type: "string"), example: ["1", "2"]),
                     new OA\Property(property: "review", type: "array",
-                        items: new OA\Items(type: "string"), example: ["ID1", "ID2"]),
+                        items: new OA\Items(type: "string"), example: ["1", "2"]),
                     new OA\Property(property: "comment", type: "array",
-                        items: new OA\Items(type: "string"), example: ["ID1", "ID2"])
+                        items: new OA\Items(type: "string"), example: ["1", "2"])
                 ])))]
 
     #[OA\Tag(name: "User")]

@@ -57,10 +57,10 @@ class CreateGenreAction extends AbstractEntityController
         mediaType: "application/json",
         schema: new OA\Schema(required: ["title"],
             properties: [
-                new OA\Property(property: "title", type: "string", example: "Must be unique"),
+                new OA\Property(property: "title", type: "string", example: "Unique Title"),
                 new OA\Property(property: "slug", type: "string", example: ""),
                 new OA\Property(property: "game", type: "array",
-                    items: new OA\Items(type: "string"), example: ["ID1", "ID2"])
+                    items: new OA\Items(type: "string"), example: ["1", "1"])
             ])))]
     #[OA\Tag(name: "Genre")]
     #[Security(name: "bearerAuth")]

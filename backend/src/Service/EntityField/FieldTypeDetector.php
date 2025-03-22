@@ -37,23 +37,15 @@ class FieldTypeDetector
     }
 
     /**
-     * Определяет, является ли поле Enum
+     * Определяет, является ли поле Enum, и возвращает класс Enum или false
      */
-    public function isEnumField(object $entity, string $fieldName): bool
-    {
-        return $this->getEnumType($entity, $fieldName) !== null;
-    }
-
-    /**
-     * Получает класс Enum для поля сущности
-     */
-    public function getEnumType(object $entity, string $fieldName): ?string
+    public function isEnumField(object $entity, string $fieldName): string|bool
     {
         try {
             $reflection = new \ReflectionClass($entity);
 
             if (!$reflection->hasProperty($fieldName)) {
-                return null;
+                return false;
             }
 
             $property = $reflection->getProperty($fieldName);
@@ -64,14 +56,14 @@ class FieldTypeDetector
 
                 // Проверяем, является ли тип Enum
                 if (\enum_exists($typeName)) {
-                    return $typeName;
+                    return $typeName; // Возвращаем имя класса enum
                 }
             }
         } catch (\Exception $e) {
-            // В случае ошибки просто возвращаем null
+            // В случае ошибки просто возвращаем false
         }
 
-        return null;
+        return false;
     }
 
     /**

@@ -77,12 +77,12 @@ class UpdateTagAction extends AbstractEntityController
             mediaType: "application/json",
             schema: new OA\Schema(
                 properties: [
-                    new OA\Property(property: "title",type: "string", example: "Must be unique"),
+                    new OA\Property(property: "title", type: "string", example: "EditedUniqueTitle"),
                     new OA\Property(property: "slug", type: "string", example: ""),
                     new OA\Property(property: "news", type: "array",
-                        items: new OA\Items(type: "string"), example: ["ID1", "ID2"]),
+                        items: new OA\Items(type: "string"), example: ["3", "4"]),
                     new OA\Property(property: "review", type: "array",
-                        items: new OA\Items(type: "string"), example: ["ID1", "ID2"])
+                        items: new OA\Items(type: "string"), example: ["3", "4"])
                 ])))]
     #[OA\Tag(name: "Tag")]
     #[Security(name: "bearerAuth")]

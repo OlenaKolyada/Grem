@@ -72,19 +72,19 @@ class UpdateNewsAction extends AbstractEntityController
             mediaType: "application/json",
             schema: new OA\Schema(
                 properties: [
-                    new OA\Property(property: "title", type: "string", example: "Must be unique"),
+                    new OA\Property(property: "title", type: "string", example: "Edited Unique Titile"),
                     new OA\Property(property: "slug", type: "string", example: ""),
                     new OA\Property(property: "content", type: "string", example: "Minimum 10 characters"),
                     new OA\Property(property: "summary", type: "string", example: "Minimum 10 characters"),
                     new OA\Property(property: "status", type: "string",
                         enum: ["Published", "Draft", "Archived", "Deleted"],
-                        example: "Published"),
+                        example: "Draft"),
                     new OA\Property(property: "cover", type: "string", example: "cover.jpg"),
-                    new OA\Property(property: "author", type: "string", example: "ID"),
+                    new OA\Property(property: "author", type: "string", example: "2"),
                     new OA\Property(property: "tag", type: "array",
-                        items: new OA\Items(type: "string"), example: ["ID1", "ID2"]),
+                        items: new OA\Items(type: "string"), example: ["3", "4"]),
                     new OA\Property(property: "game", type: "array",
-                        items: new OA\Items(type: "string"), example: ["ID1", "ID2"])
+                        items: new OA\Items(type: "string"), example: ["3", "4"])
                 ])))]
     #[OA\Tag(name: "News")]
     #[Security(name: "bearerAuth")]

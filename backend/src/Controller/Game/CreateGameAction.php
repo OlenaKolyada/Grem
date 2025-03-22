@@ -98,15 +98,15 @@ class CreateGameAction extends AbstractEntityController
             schema: new OA\Schema(
                 required: ["title", "status", "content", "summary", "platformRequirementsLevel", "ageRating"],
                 properties: [
-                    new OA\Property(property: "title", type: "string", example: "Must be unique"),
+                    new OA\Property(property: "title", type: "string", example: "Unique Title"),
                     new OA\Property(property: "slug", type: "string", example: ""),
                     new OA\Property(property: "content", type: "string", example: "Minimum 10 characters"),
                     new OA\Property(property: "summary", type: "string", example: "Minimum 10 characters"),
                     new OA\Property(property: "status", type: "string",
                         enum: ["Published", "Draft", "Archived", "Deleted"], example: "Published"),
                     new OA\Property(property: "cover", type: "string", example: "cover.jpg"),
-                    new OA\Property(property: "releaseDateWorld", type: "string", example: 'dd/mm/yyyy'),
-                    new OA\Property(property: "releaseDateFrance", type: "string", example: 'dd/mm/yyyy'),
+                    new OA\Property(property: "releaseDateWorld", type: "string", example: '10/05/2024'),
+                    new OA\Property(property: "releaseDateFrance", type: "string", example: '06/01/2025'),
                     new OA\Property(property: "platformRequirementsLevel", type: "string",
                         enum: ["Low", "Medium", "High"], example: "Medium"),
                     new OA\Property(property: "ageRating", type: "string",
@@ -115,17 +115,17 @@ class CreateGameAction extends AbstractEntityController
                         items: new OA\Items(type: "string"), example: ["en", "fr"]),
                     new OA\Property(property: "website", type: "string", example: "https://example.com"),
                     new OA\Property(property: "developer", type: "array",
-                        items: new OA\Items(type: "string"), example: ["ID1", "ID2"]),
+                        items: new OA\Items(type: "string"), example: ["1", "2"]),
                     new OA\Property(property: "genre", type: "array",
-                        items: new OA\Items(type: "string"), example: ["ID1", "ID2"]),
+                        items: new OA\Items(type: "string"), example: ["1", "2"]),
                     new OA\Property(property: "platform", type: "array",
-                        items: new OA\Items(type: "string"), example: ["ID1", "ID2"]),
+                        items: new OA\Items(type: "string"), example: ["1", "2"]),
                     new OA\Property(property: "publisher", type: "array",
-                        items: new OA\Items(type: "string"), example: ["ID1", "ID2"]),
+                        items: new OA\Items(type: "string"), example: ["1", "2"]),
                     new OA\Property(property: "news", type: "array",
-                        items: new OA\Items(type: "string"), example: ["ID1", "ID2"]),
+                        items: new OA\Items(type: "string"), example: ["1", "2"]),
                     new OA\Property(property: "review", type: "array",
-                        items: new OA\Items(type: "string"), example: ["ID1", "ID2"])
+                        items: new OA\Items(type: "string"), example: ["1", "2"])
                 ])))]
     #[OA\Tag(name: "Game")]
     #[Security(name: "bearerAuth")]

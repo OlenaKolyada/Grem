@@ -44,7 +44,7 @@ class FieldManager
 
         foreach ($fieldNames as $fieldName) {
             // Пробуем получить enum тип напрямую - это наиболее приоритетная проверка
-            $enumClass = $this->fieldTypeDetector->getEnumType($entity, $fieldName);
+            $enumClass = $this->fieldTypeDetector->isEnumField($entity, $fieldName);
             if ($enumClass) {
                 $enumFields[] = $fieldName;
                 continue;

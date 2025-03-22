@@ -69,12 +69,12 @@ class CreateCommentAction extends AbstractEntityController
             schema: new OA\Schema(
                 required: ["content", "status", "review"],
                 properties: [
-                    new OA\Property(property: "content", type: "string"),
+                    new OA\Property(property: "content", type: "string", example: "New comment"),
                     new OA\Property(property: "status", type: "string",
                         enum: ["Published", "Edited", "Deleted"],
                         example: 'Published'),
-                    new OA\Property(property: "author", type: "string", example: 'ID'),
-                    new OA\Property(property: "review", type: "string", example: 'ID')
+                    new OA\Property(property: "author", type: "string", example: '1'),
+                    new OA\Property(property: "review", type: "string", example: '1')
                 ])))]
     #[OA\Tag(name: "Comment")]
     #[Security(name: "bearerAuth")]

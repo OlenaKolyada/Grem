@@ -73,12 +73,12 @@ class UpdateCommentAction extends AbstractEntityController
             mediaType: "application/json",
             schema: new OA\Schema(
                 properties: [
-                    new OA\Property(property: "content", type: "string"),
+                    new OA\Property(property: "content", type: "string", example: "Edited comment"),
                     new OA\Property(property: "status", type: "string",
                         enum: ["Published", "Edited", "Deleted"],
-                        example: 'Published'),
-                    new OA\Property(property: "author", type: "string", example: 'ID'),
-                    new OA\Property(property: "review", type: "string", example: 'ID')
+                        example: 'Deleted'),
+                    new OA\Property(property: "author", type: "string", example: '2'),
+                    new OA\Property(property: "review", type: "string", example: '2')
                 ])))]
     #[OA\Tag(name: "Comment")]
     #[Security(name: "bearerAuth")]

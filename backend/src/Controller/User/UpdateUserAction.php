@@ -77,21 +77,20 @@ class UpdateUserAction extends AbstractEntityController
             mediaType: "application/json",
             schema: new OA\Schema(
                 properties: [
-                    new OA\Property(property: "nickname", type: "string", example: "Must be unique"),
-                    new OA\Property(property: "email", type: "string", example: "must_be_unique@gmail.com"),
+                    new OA\Property(property: "nickname", type: "string", example: "Edited Unique Nickname"),
+                    new OA\Property(property: "email", type: "string", example: "edited_must_be_unique@gmail.com"),
                     new OA\Property(property: "password", type: "string", example: "password"),
                     new OA\Property(property: "roles", type: "array",
                         items: new OA\Items(type: "string"), example: ["ROLE_USER"]),
                     new OA\Property(property: "twitchAccount", type: "string", example: "https://twitch.com/user"),
                     new OA\Property(property: "avatar", type: "string", example: "avatar.jpg"),
                     new OA\Property(property: "news", type: "array",
-                        items: new OA\Items(type: "string"), example: ["ID1", "ID2"]),
+                        items: new OA\Items(type: "string"), example: ["3", "4"]),
                     new OA\Property(property: "review", type: "array",
-                        items: new OA\Items(type: "string"), example: ["ID1", "ID2"]),
+                        items: new OA\Items(type: "string"), example: ["3", "4"]),
                     new OA\Property(property: "comment", type: "array",
-                        items: new OA\Items(type: "string"), example: ["ID1", "ID2"])
+                        items: new OA\Items(type: "string"), example: ["3", "4"])
                 ])))]
-
     #[OA\Tag(name: "User")]
     #[Security(name: "bearerAuth")]
     public function __invoke(Request $request, User $user): JsonResponse

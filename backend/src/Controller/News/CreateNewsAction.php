@@ -75,7 +75,7 @@ class CreateNewsAction extends AbstractEntityController
             schema: new OA\Schema(
                 required: ["title", "content", "summary", "status"],
                 properties: [
-                    new OA\Property(property: "title", type: "string", example: "Must be unique"),
+                    new OA\Property(property: "title", type: "string", example: "Unique Titile"),
                     new OA\Property(property: "slug", type: "string", example: ""),
                     new OA\Property(property: "content", type: "string", example: "Minimum 10 characters"),
                     new OA\Property(property: "summary", type: "string", example: "Minimum 10 characters"),
@@ -83,11 +83,11 @@ class CreateNewsAction extends AbstractEntityController
                         enum: ["Published", "Draft", "Archived", "Deleted"],
                         example: "Published"),
                     new OA\Property(property: "cover", type: "string", example: "cover.jpg"),
-                    new OA\Property(property: "author", type: "string", example: "ID"),
+                    new OA\Property(property: "author", type: "string", example: "1"),
                     new OA\Property(property: "tag", type: "array",
-                        items: new OA\Items(type: "string"), example: ["ID1", "ID2"]),
+                        items: new OA\Items(type: "string"), example: ["1", "2"]),
                     new OA\Property(property: "game", type: "array",
-                        items: new OA\Items(type: "string"), example: ["ID1", "ID2"])
+                        items: new OA\Items(type: "string"), example: ["1", "2"])
                     ])))]
     #[OA\Tag(name: "News")]
     #[Security(name: "bearerAuth")]

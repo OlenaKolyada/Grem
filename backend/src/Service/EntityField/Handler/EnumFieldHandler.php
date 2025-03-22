@@ -32,7 +32,7 @@ class EnumFieldHandler extends AbstractFieldHandler
         $success = true;
 
         foreach ($fieldNames as $fieldName) {
-            $enumClass = $this->fieldTypeDetector->getEnumType($entity, $fieldName);
+            $enumClass = $this->fieldTypeDetector->isEnumField($entity, $fieldName);
 
             if (!$enumClass) {
                 continue; // Пропускаем не-enum поля
