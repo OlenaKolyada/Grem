@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { fetchBySlug } from "@/app/lib/fetch/fetchBySlug";
 import { MetaEntityContainer } from "@/app/components/entity";
 import type { Metadata } from 'next';
 import { generateItemMetadata } from '@/app/lib/utils';
@@ -27,13 +26,13 @@ export default async function Page(props: {
 }) {
   const { slug } = await props.params;
 
-  const entityId = await fetchBySlug("developer", slug);
+  // Проверяем существование сущности на серверной стороне
+  const entity = await fetchEntityBySlug("developer", slug);
 
-  if (!entityId) {
+  if (!entity) {
     notFound();
     return null;
   }
-
   const fields: { label: string; value: keyof Entity }[] = [
     { label: 'Country', value: 'country' }
   ];

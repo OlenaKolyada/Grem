@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { fetchBySlug } from "@/app/lib/fetch/fetchBySlug";
 import { CoreEntityContainer } from "@/app/components/entity";
 import type { Metadata } from "next";
 import { generateItemMetadata } from "@/app/lib/utils";
@@ -28,9 +27,10 @@ export default async function Page(props: {
 }) {
     const { slug } = await props.params;
 
-    const entityId = await fetchBySlug("game", slug);
+    // Проверяем существование сущности на серверной стороне
+    const entity = await fetchEntityBySlug("game", slug);
 
-    if (!entityId) {
+    if (!entity) {
         notFound();
         return null;
     }
