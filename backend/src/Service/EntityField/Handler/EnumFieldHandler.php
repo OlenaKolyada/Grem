@@ -19,9 +19,6 @@ class EnumFieldHandler extends AbstractFieldHandler
         return in_array($fieldType, ['enum', 'backedenum']);
     }
 
-    /**
-     * Обрабатывает поля с enum значениями
-     */
     public function handleFields(
         object $entity,
         array $data,
@@ -36,13 +33,12 @@ class EnumFieldHandler extends AbstractFieldHandler
             $enumClass = $this->fieldTypeDetector->isEnumField($entity, $fieldName);
 
             if (!$enumClass) {
-                continue; // Пропускаем не-enum поля
+                continue;
             }
 
-            // Проверяем, есть ли поле в данных
             if (!array_key_exists($fieldName, $data)) {
                 if ($required) {
-                    // Если поле обязательное, но его нет в данных - ошибка
+
                     if ($errors) {
                         $this->errorHandler->addError(
                             $entity,
@@ -75,9 +71,6 @@ class EnumFieldHandler extends AbstractFieldHandler
         return $success;
     }
 
-    /**
-     * Обрабатывает поле с enum значением
-     */
     public function handleEnumField(
         object $entity,
         array $data,
@@ -87,13 +80,12 @@ class EnumFieldHandler extends AbstractFieldHandler
         bool $isRequired = true,
         ?string $errorMessage = null
     ): bool {
-        // Если поле не обязательное и отсутствует или пустое
-        if (!$isRequired && (empty($data[$fieldName]) || !isset($data[$fieldName]))) {
+
+        if (!$isRequired && (empty($data[$fieldName]))) {
             return true;
         }
 
-        // Проверяем наличие обязательного поля
-        if ($isRequired && (empty($data[$fieldName]) || !isset($data[$fieldName]))) {
+        if ($isRequired && (empty($data[$fieldName]))) {
             if ($errors) {
                 $this->errorHandler->addError(
                     $entity,
@@ -107,11 +99,9 @@ class EnumFieldHandler extends AbstractFieldHandler
         }
 
         try {
-            // Безопасное получение значения Enum с помощью рефлексии
             $valueProvided = $data[$fieldName];
             $value = null;
 
-            // Проверяем все кейсы Enum и находим соответствующий
             $reflectionClass = new \ReflectionClass($enumClass);
             $cases = $reflectionClass->getMethod('cases')->invoke(null);
 
@@ -144,7 +134,6 @@ class EnumFieldHandler extends AbstractFieldHandler
                 return false;
             }
 
-            // Устанавливаем значение
             $setter = 'set' . ucfirst($fieldName);
             $entity->$setter($value);
             return true;
