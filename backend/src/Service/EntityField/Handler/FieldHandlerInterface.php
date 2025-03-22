@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\EntityField;
+namespace App\Service\EntityField\Handler;
 
 interface FieldHandlerInterface
 {

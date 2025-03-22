@@ -6,7 +6,7 @@ use App\Controller\Abstract\AbstractEntityController;
 use App\Entity\Tag;
 use App\Repository\NewsRepository;
 use App\Repository\ReviewRepository;
-use App\Service\EntityField\EntityFieldManager;
+use App\Service\EntityField\FieldManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,11 +24,11 @@ class UpdateTagAction extends AbstractEntityController
     private array $fieldConfig;
 
     public function __construct(
-        EntityManagerInterface $manager,
-        SerializerInterface $serializer,
-        ValidatorInterface $validator,
-        EntityFieldManager $fieldManager,
-        private readonly NewsRepository $newsRepository,
+        EntityManagerInterface            $manager,
+        SerializerInterface               $serializer,
+        ValidatorInterface                $validator,
+        FieldManager                      $fieldManager,
+        private readonly NewsRepository   $newsRepository,
         private readonly ReviewRepository $reviewRepository
     ) {
         parent::__construct($manager, $serializer, $validator, $fieldManager);

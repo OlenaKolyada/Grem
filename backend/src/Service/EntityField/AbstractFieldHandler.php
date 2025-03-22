@@ -2,6 +2,7 @@
 
 namespace App\Service\EntityField;
 
+use App\Service\EntityField\Handler\FieldHandlerInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 

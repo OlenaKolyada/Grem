@@ -8,7 +8,7 @@ use App\Repository\NewsRepository;
 use App\Repository\ReviewRepository;
 use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Service\EntityField\EntityFieldManager;
+use App\Service\EntityField\FieldManager;
 use App\Service\User\UserEmailService;
 use App\Service\User\UserPasswordService;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -27,14 +27,14 @@ class CreateUserAction extends AbstractEntityController
     private array $fieldConfig;
 
     public function __construct(
-        protected EntityManagerInterface $manager,
-        protected SerializerInterface $serializer,
-        protected EntityFieldManager $fieldManager,
-        protected ValidatorInterface $validator,
-        private readonly NewsRepository $newsRepository,
-        private readonly ReviewRepository $reviewRepository,
-        private readonly CommentRepository $commentRepository,
-        private readonly UserEmailService $userEmailService,
+        protected EntityManagerInterface     $manager,
+        protected SerializerInterface        $serializer,
+        protected FieldManager               $fieldManager,
+        protected ValidatorInterface         $validator,
+        private readonly NewsRepository      $newsRepository,
+        private readonly ReviewRepository    $reviewRepository,
+        private readonly CommentRepository   $commentRepository,
+        private readonly UserEmailService    $userEmailService,
         private readonly UserPasswordService $userPasswordService
     ) {
         parent::__construct($manager, $serializer, $validator, $fieldManager);

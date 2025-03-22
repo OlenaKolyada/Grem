@@ -17,7 +17,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
-use App\Service\EntityField\EntityFieldManager;
+use App\Service\EntityField\FieldManager;
 use OpenApi\Attributes as OA;
 
 class CreateNewsAction extends AbstractEntityController
@@ -27,10 +27,10 @@ class CreateNewsAction extends AbstractEntityController
     public function __construct(
         protected SerializerInterface    $serializer,
         protected EntityManagerInterface $manager,
-        protected EntityFieldManager     $fieldManager,
+        protected FieldManager           $fieldManager,
         private readonly UserRepository  $userRepository,
         private readonly TagRepository   $tagRepository,
-        private readonly GameRepository   $gameRepository,
+        private readonly GameRepository  $gameRepository,
         protected ValidatorInterface     $validator
     ) {
         parent::__construct($manager, $serializer, $validator, $fieldManager);

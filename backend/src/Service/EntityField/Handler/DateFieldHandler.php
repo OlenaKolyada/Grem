@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Service\EntityField;
+namespace App\Service\EntityField\Handler;
 
-use ReflectionClass;
+use App\Service\EntityField\AbstractFieldHandler;
+use App\Service\EntityField\FieldTypeDetector;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 class DateFieldHandler extends AbstractFieldHandler
@@ -17,9 +18,22 @@ class DateFieldHandler extends AbstractFieldHandler
         'd-m-Y',      // 01-01-2023
     ];
 
+    public function __construct(
+        private readonly FieldTypeDetector $fieldTypeDetector
+    ) {
+    }
+
     public function supports(string $fieldType): bool
     {
         return in_array($fieldType, ['date', 'datetime', 'datetime_immutable']);
+    }
+
+    /**
+     * Определяет, является ли поле типом DateTime
+     */
+    public function isDateField(object $entity, string $fieldName): bool
+    {
+        return $this->fieldTypeDetector->isDateField($entity, $fieldName);
     }
 
     /**
@@ -106,31 +120,5 @@ class DateFieldHandler extends AbstractFieldHandler
         }
 
         return null;
-    }
-
-    /**
-     * Определяет, является ли поле типом DateTime
-     */
-    public function isDateField(object $entity, string $fieldName): bool
-    {
-        try {
-            $reflection = new ReflectionClass($entity);
-
-            if (!$reflection->hasProperty($fieldName)) {
-                return false;
-            }
-
-            $property = $reflection->getProperty($fieldName);
-            $type = $property->getType();
-
-            if ($type) {
-                $typeName = $type->getName();
-                return $typeName === \DateTime::class || $typeName === \DateTimeInterface::class || $typeName === \DateTimeImmutable::class;
-            }
-        } catch (\Exception $e) {
-            // В случае ошибки просто возвращаем false
-        }
-
-        return false;
     }
 }

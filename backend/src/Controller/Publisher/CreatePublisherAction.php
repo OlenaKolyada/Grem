@@ -5,7 +5,7 @@ namespace App\Controller\Publisher;
 use App\Controller\Abstract\AbstractEntityController;
 use App\Entity\Publisher;
 use App\Repository\GameRepository;
-use App\Service\EntityField\EntityFieldManager;
+use App\Service\EntityField\FieldManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +25,7 @@ class CreatePublisherAction extends AbstractEntityController
     public function __construct(
         protected EntityManagerInterface $manager,
         protected SerializerInterface    $serializer,
-        protected EntityFieldManager     $fieldManager,
+        protected FieldManager           $fieldManager,
         protected ValidatorInterface     $validator,
         private readonly GameRepository  $gameRepository
     ) {

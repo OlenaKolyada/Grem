@@ -5,7 +5,7 @@ namespace App\Controller\Publisher;
 use App\Controller\Abstract\AbstractEntityController;
 use App\Entity\Publisher;
 use App\Repository\GameRepository;
-use App\Service\EntityField\EntityFieldManager;
+use App\Service\EntityField\FieldManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,10 +23,10 @@ class UpdatePublisherAction extends AbstractEntityController
     private array $fieldConfig;
 
     public function __construct(
-        EntityManagerInterface $manager,
-        SerializerInterface $serializer,
-        ValidatorInterface $validator,
-        EntityFieldManager $fieldManager,
+        EntityManagerInterface          $manager,
+        SerializerInterface             $serializer,
+        ValidatorInterface              $validator,
+        FieldManager                    $fieldManager,
         private readonly GameRepository $gameRepository
     ) {
         parent::__construct($manager, $serializer, $validator, $fieldManager);

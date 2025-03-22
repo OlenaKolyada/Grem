@@ -6,7 +6,7 @@ use App\Controller\Abstract\AbstractEntityController;
 use App\Entity\Comment;
 use App\Repository\UserRepository;
 use App\Repository\ReviewRepository;
-use App\Service\EntityField\EntityFieldManager;
+use App\Service\EntityField\FieldManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,12 +23,12 @@ class CreateCommentAction extends AbstractEntityController
 {
     private array $fieldConfig;
     public function __construct(
-        protected EntityManagerInterface $manager,
-        protected SerializerInterface    $serializer,
-        protected EntityFieldManager     $fieldManager,
-        protected ValidatorInterface     $validator,
-        private readonly UserRepository  $userRepository,
-        private readonly ReviewRepository  $reviewRepository,
+        protected EntityManagerInterface  $manager,
+        protected SerializerInterface     $serializer,
+        protected FieldManager            $fieldManager,
+        protected ValidatorInterface      $validator,
+        private readonly UserRepository   $userRepository,
+        private readonly ReviewRepository $reviewRepository,
     ) {
         parent::__construct($manager, $serializer, $validator, $fieldManager);
 

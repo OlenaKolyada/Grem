@@ -9,6 +9,8 @@ RUN npm install
 
 COPY . .
 
+ENV NODE_ENV=docker
+
 RUN npm run build
 
 EXPOSE 3001

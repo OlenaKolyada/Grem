@@ -1,14 +1,77 @@
 <?php
 
-namespace App\Service\EntityField;
+namespace App\Service\EntityField\Handler;
 
+use App\Service\EntityField\AbstractFieldHandler;
+use App\Service\EntityField\FieldTypeDetector;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 class EnumFieldHandler extends AbstractFieldHandler
 {
+    public function __construct(
+        private readonly FieldTypeDetector $fieldTypeDetector
+    ) {
+    }
+
     public function supports(string $fieldType): bool
     {
         return in_array($fieldType, ['enum', 'backedenum']);
+    }
+
+    /**
+     * Обрабатывает поля с enum значениями
+     */
+    public function handleFields(
+        object $entity,
+        array $data,
+        array $fieldNames,
+        ?ConstraintViolationListInterface $errors = null,
+        bool $required = false,
+        ?string $errorMessage = null
+    ): bool {
+        $success = true;
+
+        foreach ($fieldNames as $fieldName) {
+            $enumClass = $this->fieldTypeDetector->getEnumType($entity, $fieldName);
+
+            if (!$enumClass) {
+                continue; // Пропускаем не-enum поля
+            }
+
+            // Проверяем, есть ли поле в данных
+            if (!array_key_exists($fieldName, $data)) {
+                if ($required) {
+                    // Если поле обязательное, но его нет в данных - ошибка
+                    if ($errors) {
+                        $this->addError(
+                            $entity,
+                            $fieldName,
+                            $errorMessage ?? ucfirst($fieldName) . ' is required',
+                            null,
+                            $errors
+                        );
+                    }
+                    $success = false;
+                }
+                continue;
+            }
+
+            $fieldSuccess = $this->handleEnumField(
+                $entity,
+                $data,
+                $fieldName,
+                $enumClass,
+                $errors,
+                $required,
+                $errorMessage
+            );
+
+            if (!$fieldSuccess) {
+                $success = false;
+            }
+        }
+
+        return $success;
     }
 
     /**
@@ -23,13 +86,13 @@ class EnumFieldHandler extends AbstractFieldHandler
         bool $isRequired = true,
         ?string $errorMessage = null
     ): bool {
-        // Если поле не обязательное и отсутствует
-        if (!$isRequired && empty($data[$fieldName])) {
+        // Если поле не обязательное и отсутствует или пустое
+        if (!$isRequired && (empty($data[$fieldName]) || !isset($data[$fieldName]))) {
             return true;
         }
 
         // Проверяем наличие обязательного поля
-        if ($isRequired && empty($data[$fieldName])) {
+        if ($isRequired && (empty($data[$fieldName]) || !isset($data[$fieldName]))) {
             if ($errors) {
                 $this->addError(
                     $entity,
@@ -52,7 +115,8 @@ class EnumFieldHandler extends AbstractFieldHandler
             $cases = $reflectionClass->getMethod('cases')->invoke(null);
 
             foreach ($cases as $case) {
-                if ($case->name === $valueProvided || $case->value === $valueProvided) {
+                if ((string)$case->name === (string)$valueProvided ||
+                    (property_exists($case, 'value') && (string)$case->value === (string)$valueProvided)) {
                     $value = $case;
                     break;
                 }
@@ -83,7 +147,6 @@ class EnumFieldHandler extends AbstractFieldHandler
             $setter = 'set' . ucfirst($fieldName);
             $entity->$setter($value);
             return true;
-
         } catch (\Exception $e) {
             if ($errors) {
                 $this->addError(

@@ -1,14 +1,29 @@
 <?php
 
-namespace App\Service\EntityField;
+namespace App\Service\EntityField\Handler;
 
+use App\Service\EntityField\AbstractFieldHandler;
+use App\Service\EntityField\FieldTypeDetector;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
-class EntityCollectionFieldHandler extends AbstractFieldHandler
+class CollectionFieldHandler extends AbstractFieldHandler
 {
+    public function __construct(
+        private readonly FieldTypeDetector $fieldTypeDetector
+    ) {
+    }
+
     public function supports(string $fieldType): bool
     {
         return in_array($fieldType, ['collection', 'manytomany', 'onetomany']);
+    }
+
+    /**
+     * Определяет, является ли поле коллекцией
+     */
+    public function isCollectionField(object $entity, string $fieldName): bool
+    {
+        return $this->fieldTypeDetector->isCollectionField($entity, $fieldName);
     }
 
     /**
@@ -137,22 +152,22 @@ class EntityCollectionFieldHandler extends AbstractFieldHandler
         // Если значение строка, проверяем различные разделители
         if (is_string($value)) {
             // Проверяем запятую с пробелом
-            if (str_contains($value, ', ')) {
+            if (\str_contains($value, ', ')) {
                 return array_map('trim', explode(', ', $value));
             }
 
             // Проверяем только запятую
-            if (str_contains($value, ',')) {
+            if (\str_contains($value, ',')) {
                 return array_map('trim', explode(',', $value));
             }
 
             // Проверяем точку с запятой
-            if (str_contains($value, ';')) {
+            if (\str_contains($value, ';')) {
                 return array_map('trim', explode(';', $value));
             }
 
             // Проверяем пробел
-            if (str_contains($value, ' ')) {
+            if (\str_contains($value, ' ')) {
                 return array_map('trim', explode(' ', $value));
             }
         }

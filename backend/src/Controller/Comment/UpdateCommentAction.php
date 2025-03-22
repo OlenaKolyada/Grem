@@ -6,7 +6,7 @@ use App\Controller\Abstract\AbstractEntityController;
 use App\Entity\Comment;
 use App\Repository\ReviewRepository;
 use App\Repository\UserRepository;
-use App\Service\EntityField\EntityFieldManager;
+use App\Service\EntityField\FieldManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +24,7 @@ class UpdateCommentAction extends AbstractEntityController
     private array $fieldConfig;
     public function __construct(
         protected EntityManagerInterface  $manager,
-        protected EntityFieldManager      $fieldManager,
+        protected FieldManager            $fieldManager,
         protected SerializerInterface     $serializer,
         protected ValidatorInterface      $validator,
         private readonly ReviewRepository $reviewRepository,

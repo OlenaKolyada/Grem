@@ -2,7 +2,7 @@
 
 namespace App\Controller\Abstract;
 
-use App\Service\EntityField\EntityFieldManager;
+use App\Service\EntityField\FieldManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +16,7 @@ abstract class AbstractEntityController
         protected EntityManagerInterface $manager,
         protected SerializerInterface $serializer,
         protected ValidatorInterface $validator,
-        protected EntityFieldManager $fieldManager
+        protected FieldManager $fieldManager
     ) {
     }
 

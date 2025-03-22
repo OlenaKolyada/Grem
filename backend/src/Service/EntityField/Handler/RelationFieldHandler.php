@@ -1,15 +1,29 @@
 <?php
 
-namespace App\Service\EntityField;
+namespace App\Service\EntityField\Handler;
 
 use App\Service\EntityField\AbstractFieldHandler;
+use App\Service\EntityField\FieldTypeDetector;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
-class EntityRelationFieldHandler extends AbstractFieldHandler
+class RelationFieldHandler extends AbstractFieldHandler
 {
+    public function __construct(
+        private readonly FieldTypeDetector $fieldTypeDetector
+    ) {
+    }
+
     public function supports(string $fieldType): bool
     {
         return in_array($fieldType, ['entity', 'relation', 'manytoone']);
+    }
+
+    /**
+     * Определяет, является ли поле отношением с другой сущностью
+     */
+    public function isRelationField(object $entity, string $fieldName): bool
+    {
+        return $this->fieldTypeDetector->isRelationField($entity, $fieldName);
     }
 
     /**
