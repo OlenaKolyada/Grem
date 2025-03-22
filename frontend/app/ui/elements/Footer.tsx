@@ -1,13 +1,13 @@
 // app/ui/elements/Footer.tsx
 import Image from 'next/image';
-import { IMAGE_URL } from "@/app/lib/config";
+import { API_URL } from "@/app/lib/config/constants";
 
 export function Footer() {
     return (
         <div className="md:ml-0 bg-gray-100 rounded-lg mt-auto py-3">
             <div className="flex flex-col items-center mt-3">
                 <Image
-                    src={`${IMAGE_URL}/uploads/images/assets/funkycorgi.png`}
+                    src={`${API_URL}/uploads/images/assets/funkycorgi.png`}
                     alt="Funky Corgi"
                     width={50}
                     height={50}

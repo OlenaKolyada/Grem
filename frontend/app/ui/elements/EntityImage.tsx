@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { IMAGE_URL } from "@/app/lib/config";
+import { API_URL } from "@/app/lib/config/constants";
 
 interface EntityImageProps {
     id: number | undefined;
@@ -23,8 +23,8 @@ export function EntityImage({
                                 imageType = 'cover'
                             }: EntityImageProps) {
     const imageUrl = coverUrl
-        ? `${IMAGE_URL}${coverUrl}`
-        : `/images/${categoryName}/${id}/${imageType}.jpg`;
+        ? `${API_URL}/${coverUrl}`
+        : `${API_URL}//uploads/images/${categoryName}/${id}/${imageType}.jpg`;
 
     return (
         <div className={`relative ${width} ${height} shrink-0 ${className}`}>

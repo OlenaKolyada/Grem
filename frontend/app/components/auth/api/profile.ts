@@ -1,11 +1,10 @@
 // app/components/auth/api/profile.ts
 
 import {User} from "@/app/lib/types";
-
-const API_URL = 'http://localhost:8000/api';
+import { API_URL } from "@/app/lib/config"
 
 export async function profile(): Promise<User | null> {
-    const response = await fetch(`${API_URL}/profile`, {
+    const response = await fetch(`${API_URL}/api/profile`, {
         credentials: 'include',
     });
 

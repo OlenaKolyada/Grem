@@ -1,6 +1,6 @@
 // app/components/auth/api/login.ts
 
-const API_URL = 'http://localhost:8000/api';
+import { API_URL } from "@/app/lib/config";
 
 interface LoginCredentials {
     email: string;
@@ -8,7 +8,7 @@ interface LoginCredentials {
 }
 
 export async function login(credentials: LoginCredentials): Promise<{ message: string }> {
-    const response = await fetch(`${API_URL}/login`, {
+    const response = await fetch(`${API_URL}/api/login`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

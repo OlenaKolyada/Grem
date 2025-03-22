@@ -1,9 +1,9 @@
 // app/components/auth/api/logout.ts
 
-const API_URL = 'http://localhost:8000/api';
+import { API_URL } from "@/app/lib/config";
 
 export async function logout(): Promise<{ message: string }> {
-    const response = await fetch(`${API_URL}/logout`, {
+    const response = await fetch(`${API_URL}/api/logout`, {
         method: 'POST',
         credentials: 'include',
     });

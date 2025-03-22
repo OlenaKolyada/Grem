@@ -1,6 +1,14 @@
-// app/lib/config/menu-links.ts
+// app/lib/config/constants.ts
 
-export const IMAGE_URL = process.env.NEXT_PUBLIC_API_URL || "";
 export const CORE_ENTITIES = ['game', 'news', 'review'];
 export const META_ENTITIES = ['developer', 'genre', 'platform', 'publisher', 'tag'];
-export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+
+export const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+export const API_CONFIG = {
+    timeout: 10000,
+    headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+    }
+};

@@ -31,7 +31,7 @@ class DashboardController extends AbstractDashboardController
                 [
                     'title' => 'Site',
                     'icon' => 'fa-solid fa-city',
-                    'url' => 'http://localhost:3000/',
+                    'url' => 'http://localhost:80/',
                 ],
                 [
                     'title' => 'News',
@@ -86,7 +86,7 @@ class DashboardController extends AbstractDashboardController
                 [
                     'title' => 'Documentation',
                     'icon' => 'fa-solid fa-file',
-                    'url' => 'http://localhost:8000/api/doc',
+                    'url' => 'http://localhost:8001/api/doc',
                 ],
             ],
         ]);
@@ -101,7 +101,7 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa-solid fa-gear');
-        yield MenuItem::linkToUrl('Site', 'fa-solid fa-city', 'http://localhost:3000/');
+        yield MenuItem::linkToUrl('Site', 'fa-solid fa-city', 'http://localhost:80/');
         yield MenuItem::linkToCrud('News', 'fa-solid fa-rocket', News::class);
         yield MenuItem::linkToCrud('Reviews', 'fa-solid fa-brain', Review::class);
         yield MenuItem::linkToCrud('Games', 'fa-solid fa-gamepad', Game::class);

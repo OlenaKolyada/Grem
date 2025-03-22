@@ -8,9 +8,9 @@ services:
       - db-data:/var/lib/mysql
     environment:
       MYSQL_DATABASE: grem
-      MYSQL_USER: gremu
-      MYSQL_PASSWORD: gremp
-      MYSQL_ROOT_PASSWORD: grem1
+      MYSQL_USER: grem
+      MYSQL_PASSWORD: grem
+      MYSQL_ROOT_PASSWORD: grem
 
     networks:
       - grem
@@ -37,17 +37,19 @@ services:
     container_name: backend
     environment:
       APP_ENV: prod
-      DATABASE_URL: "mysql://gremu:gremp@db:3306/grem?charset=utf8mb4"
+      DATAAPI_URL: "mysql://grem:grem@db:3306/grem?charset=utf8mb4"
     depends_on:
       - db
     ports:
       - "8001:80"
     volumes:
-     - ./docker/backend/vhosts:/etc/apache2/sites-enabled
-     - ./backend:/var/www
+      - ./docker/backend/vhosts:/etc/apache2/sites-enabled
+      - ./backend:/var/www
+      - ./docker/backend/entrypoint.sh:/entrypoint.sh
     restart: always
     networks:
       - grem
+    command: [ "/bin/bash", "/entrypoint.sh" ]
 
 
   # React / Next.js frontend container
@@ -57,9 +59,10 @@ services:
       dockerfile: ../docker/frontend/Dockerfile
     container_name: frontend
     environment:
-      NEXT_PUBLIC_API_URL: "backend"
+      NEXT_PUBLIC_API_URL: "http://backend:80"
+      NEXT_PUBLIC_ENVIRONMENT: "docker"
     ports:
-      - "80:3000"
+      - "80:3001"
 #    volumes:
 #      - ./frontend:/app
     networks:
