@@ -80,7 +80,7 @@ class CreateUserAction extends AbstractEntityController
                 required: ["nickname", "email", "password", "roles"],
                 properties: [
                     new OA\Property(property: "nickname", type: "string", example: "Unique Nickname"),
-                    new OA\Property(property: "email", type: "string", example: "must_be_unique@gmail.com"),
+                    new OA\Property(property: "email", type: "string", example: "unique_email@gmail.com"),
                     new OA\Property(property: "password", type: "string", example: "password"),
                     new OA\Property(property: "roles", type: "array",
                         items: new OA\Items(type: "string"), example: ["ROLE_ADMIN"]),

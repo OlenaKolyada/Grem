@@ -78,7 +78,7 @@ class UpdateUserAction extends AbstractEntityController
             schema: new OA\Schema(
                 properties: [
                     new OA\Property(property: "nickname", type: "string", example: "Edited Unique Nickname"),
-                    new OA\Property(property: "email", type: "string", example: "edited_must_be_unique@gmail.com"),
+                    new OA\Property(property: "email", type: "string", example: "edited_unique_email@gmail.com"),
                     new OA\Property(property: "password", type: "string", example: "password"),
                     new OA\Property(property: "roles", type: "array",
                         items: new OA\Items(type: "string"), example: ["ROLE_USER"]),
