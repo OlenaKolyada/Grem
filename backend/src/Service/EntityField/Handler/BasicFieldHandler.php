@@ -6,11 +6,11 @@ use App\Service\EntityField\FieldTypeDetector;
 use App\Service\EntityField\FieldErrorHandler;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
-class BasicFieldHandler implements FieldHandlerInterface
+readonly class BasicFieldHandler implements FieldHandlerInterface
 {
     public function __construct(
-        private readonly FieldTypeDetector $fieldTypeDetector,
-        private readonly FieldErrorHandler $errorHandler
+        private FieldTypeDetector $fieldTypeDetector,
+        private FieldErrorHandler $errorHandler
     ) {
     }
 
@@ -19,9 +19,6 @@ class BasicFieldHandler implements FieldHandlerInterface
         return in_array($fieldType, ['string', 'text', 'basic']);
     }
 
-    /**
-     * Обрабатывает поля
-     */
     public function handleFields(
         object $entity,
         array $data,
@@ -33,7 +30,6 @@ class BasicFieldHandler implements FieldHandlerInterface
         $success = true;
 
         foreach ($fieldNames as $fieldName) {
-            // Пропускаем поля, если они не должны обрабатываться этим обработчиком
             if ($this->fieldTypeDetector->isDateField($entity, $fieldName) ||
                 $this->fieldTypeDetector->isEnumField($entity, $fieldName) ||
                 $this->fieldTypeDetector->isCollectionField($entity, $fieldName) ||
@@ -56,12 +52,10 @@ class BasicFieldHandler implements FieldHandlerInterface
                 continue;
             }
 
-            // Пропускаем необязательные поля, если их нет в данных
             if (!$required && !isset($data[$fieldName])) {
                 continue;
             }
 
-            // Устанавливаем значение поля
             $setter = 'set' . ucfirst($fieldName);
             if (method_exists($entity, $setter)) {
                 $entity->$setter($data[$fieldName]);
