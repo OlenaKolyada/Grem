@@ -45,7 +45,7 @@ class UpdateReviewAction extends AbstractUpdateEntityAction
             mediaType: "application/json",
             schema: new OA\Schema(
                 properties: [
-                    new OA\Property(property: "title", type: "string", example: "Edited Unique Titile"),
+                    new OA\Property(property: "title", type: "string", example: "Edited Unique Title"),
                     new OA\Property(property: "slug", type: "string", example: ""),
                     new OA\Property(property: "content", type: "string", example: "Minimum 10 characters"),
                     new OA\Property(property: "summary", type: "string", example: "Minimum 10 characters"),

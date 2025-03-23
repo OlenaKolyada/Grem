@@ -15,8 +15,8 @@ use OpenApi\Attributes as OA;
 class DeleteReviewAction extends AbstractDeleteEntityAction
 {
     public function __construct(
-        protected readonly EntityManagerInterface $manager,
-        protected readonly TagAwareCacheInterface $cache
+        EntityManagerInterface $manager,
+        TagAwareCacheInterface $cache
     ) {
         parent::__construct($manager, $cache);
     }

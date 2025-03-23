@@ -49,7 +49,7 @@ class CreateReviewAction extends AbstractCreateEntityAction
             schema: new OA\Schema(
                 required: ["title", "status", "content", "summary"],
                 properties: [
-                    new OA\Property(property: "title", type: "string", example: "Unique Titile"),
+                    new OA\Property(property: "title", type: "string", example: "Unique Title"),
                     new OA\Property(property: "slug", type: "string", example: ""),
                     new OA\Property(property: "content", type: "string", example: "Minimum 10 characters"),
                     new OA\Property(property: "summary", type: "string", example: "Minimum 10 characters"),

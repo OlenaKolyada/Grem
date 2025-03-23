@@ -13,7 +13,7 @@ use OpenApi\Attributes as OA;
 class GetReviewAction extends AbstractGetEntityAction
 {
     public function __construct(
-        protected readonly CacheService $cacheService
+        CacheService $cacheService
     ) {
         parent::__construct($cacheService);
     }

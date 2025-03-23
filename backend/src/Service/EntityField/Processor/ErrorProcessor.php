@@ -3,6 +3,7 @@
 namespace App\Service\EntityField\Processor;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -26,7 +27,7 @@ readonly class ErrorProcessor
         if ($errors->count() > 0) {
             return new JsonResponse(
                 $this->serializer->serialize($errors, 'json'),
-                JsonResponse::HTTP_BAD_REQUEST,
+                Response::HTTP_BAD_REQUEST,
                 [],
                 true
             );

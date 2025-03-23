@@ -139,7 +139,7 @@ readonly class EntityConfigurationFactory implements EntityConfigurationFactoryI
             'relations' => [
                 'author' => $this->createEntityRelation($this->userRepository, true),
                 'tag' => $this->createCollectionRelation($this->tagRepository),
-                'game' => $this->createEntityRelation($this->gameRepository, true)
+                'game' => $this->createCollectionRelation($this->gameRepository)
             ]
         ];
     }
