@@ -28,7 +28,8 @@ class DeleteReviewAction extends AbstractDeleteEntityAction
     #[OA\Response(response: 403, description: "Access denied - insufficient permissions")]
     #[OA\Response(response: 404, description: "Review not found")]
     #[OA\Parameter(name: "id", description: "Review ID", in: "path",
-        required: true, schema: new OA\Schema(type: "integer"))]
+        required: true, schema: new OA\Schema(type: "integer")
+    )]
     #[OA\Tag(name: "Review")]
     #[Security(name: "bearerAuth")]
     public function __invoke(Review $review): Response

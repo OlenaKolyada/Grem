@@ -26,12 +26,14 @@ class GetPublisherAction extends AbstractGetEntityAction
             items: new OA\Items(
                 ref: new Model(
                     type: Publisher::class,
-                    groups: ["getPublisher"]))))]
+                    groups: ["getPublisher"]
+                ))))]
     #[OA\Parameter(name: "id",
         description: "Publisher ID",
         in: "path",
         required: true,
-        schema: new OA\Schema(type: "integer"))]
+        schema: new OA\Schema(type: "integer")
+    )]
     #[OA\Tag(name: "Publisher")]
     public function __invoke(Publisher $publisher): JsonResponse
     {

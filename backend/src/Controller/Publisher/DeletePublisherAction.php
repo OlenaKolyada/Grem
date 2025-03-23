@@ -27,7 +27,8 @@ class DeletePublisherAction extends AbstractDeleteEntityAction
     #[OA\Response(response: 403, description: "Access denied - insufficient permissions")]
     #[OA\Response(response: 404, description: "Publisher not found")]
     #[OA\Parameter(name: "id", description: "Publisher ID", in: "path",
-        required: true, schema: new OA\Schema(type: "integer"))]
+        required: true, schema: new OA\Schema(type: "integer")
+    )]
     #[OA\Tag(name: "Publisher")]
     #[Security(name: "bearerAuth")]
     public function __invoke(Publisher $publisher): Response

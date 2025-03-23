@@ -29,13 +29,15 @@ class GetCommentCollectionAction extends AbstractGetMetaEntityCollectionAction
             items: new OA\Items(
                 ref: new Model(
                     type: Comment::class,
-                    groups: ["getCommentCollection"]))))]
+                    groups: ["getCommentCollection"]
+                ))))]
     #[OA\Parameter(name: "status",
         description: "Comment status",
         in: "query",
         schema: new OA\Schema(
             type: "string",
-            enum: ["Published", "Edited", "Deleted"]))]
+            enum: ["Published", "Edited", "Deleted"]
+        ))]
     #[OA\Tag(name: "Comment")]
     public function __invoke(Request $request): JsonResponse
     {

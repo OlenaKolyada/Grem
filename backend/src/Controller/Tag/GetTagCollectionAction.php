@@ -27,7 +27,8 @@ class GetTagCollectionAction extends AbstractGetMetaEntityCollectionAction
             items: new OA\Items(
                 ref: new Model(
                     type: Tag::class,
-                    groups: ["getTagCollection"]))))]
+                    groups: ["getTagCollection"]
+                ))))]
     #[OA\Tag(name: "Tag")]
     public function __invoke(): JsonResponse
     {

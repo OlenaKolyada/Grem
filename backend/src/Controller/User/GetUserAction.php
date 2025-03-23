@@ -2,20 +2,26 @@
 
 namespace App\Controller\User;
 
+use App\Controller\Abstract\AbstractGetEntityAction;
 use App\Entity\User;
 use App\Service\CacheService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
+use Symfony\Bundle\SecurityBundle\Security;
 
-class GetUserAction extends AbstractController
+class GetUserAction extends AbstractGetEntityAction
 {
+    private readonly Security $security;
+
     public function __construct(
-        private readonly CacheService $cacheService
+        CacheService $cacheService,
+        Security $security
     ) {
+        parent::__construct($cacheService);
+        $this->security = $security;
     }
 
     #[Route('/api/user/{id}', name: 'app_get_user_item', methods: ['GET'])]
@@ -35,27 +41,16 @@ class GetUserAction extends AbstractController
     #[OA\Tag(name: "User")]
     public function __invoke(User $user): JsonResponse
     {
-        if (!$this->getUser()) {
+        if (!$this->security->getUser()) {
             return new JsonResponse(['error' => 'Not authenticated'], Response::HTTP_UNAUTHORIZED);
         }
 
-        $idCache = "getUserAction-" . $user->getId();
-
-        $jsonData = $this->cacheService->getCachedData(
-            $idCache,
-            "userCache",
-            function() use ($user) {
-                return $user;
-            },
+        return $this->getEntityData(
+            $user,
+            'User',
+            'user',
             'getUser',
             ['user']
-        );
-
-        return new JsonResponse(
-            $jsonData,
-            Response::HTTP_OK,
-            [],
-            true
         );
     }
 }

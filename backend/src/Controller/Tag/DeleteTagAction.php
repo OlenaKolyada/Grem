@@ -27,7 +27,8 @@ class DeleteTagAction extends AbstractDeleteEntityAction
     #[OA\Response(response: 403, description: "Access denied - insufficient permissions")]
     #[OA\Response(response: 404, description: "Tag not found")]
     #[OA\Parameter(name: "id", description: "Tag ID",in: "path",
-        required: true, schema: new OA\Schema(type: "integer"))]
+        required: true, schema: new OA\Schema(type: "integer")
+    )]
     #[OA\Tag(name: "Tag")]
     #[Security(name: "bearerAuth")]
     public function __invoke(Tag $tag): Response

@@ -28,7 +28,8 @@ class GetUserCollectionAction extends AbstractGetMetaEntityCollectionAction
             items: new OA\Items(
                 ref: new Model(
                     type: User::class,
-                    groups: ["getUserCollection"]))))]
+                    groups: ["getUserCollection"]
+                ))))]
     #[OA\Tag(name: "User")]
     public function __invoke(): JsonResponse
     {

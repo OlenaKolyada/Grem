@@ -26,12 +26,14 @@ class GetPlatformAction extends AbstractGetEntityAction
             items: new OA\Items(
                 ref: new Model(
                     type: Platform::class,
-                    groups: ["getPlatform"]))))]
+                    groups: ["getPlatform"]
+                ))))]
     #[OA\Parameter(name: "id",
         description: "Platform ID",
         in: "path",
         required: true,
-        schema: new OA\Schema(type: "integer"))]
+        schema: new OA\Schema(type: "integer")
+    )]
     #[OA\Tag(name: "Platform")]
     public function __invoke(Platform $platform): JsonResponse
     {

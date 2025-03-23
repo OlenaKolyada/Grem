@@ -27,7 +27,8 @@ class GetPublisherCollectionAction extends AbstractGetMetaEntityCollectionAction
             items: new OA\Items(
                 ref: new Model(
                     type: Publisher::class,
-                    groups: ["getPublisherCollection"]))))]
+                    groups: ["getPublisherCollection"]
+                ))))]
     #[OA\Tag(name: "Publisher")]
     public function __invoke(): JsonResponse
     {

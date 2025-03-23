@@ -26,12 +26,14 @@ class GetDeveloperAction extends AbstractGetEntityAction
             items: new OA\Items(
                 ref: new Model(
                     type: Developer::class,
-                    groups: ["getDeveloper"]))))]
+                    groups: ["getDeveloper"]
+                ))))]
     #[OA\Parameter(name: "id",
         description: "Developer ID",
         in: "path",
         required: true,
-        schema: new OA\Schema(type: "integer"))]
+        schema: new OA\Schema(type: "integer")
+    )]
     #[OA\Tag(name: "Developer")]
     public function __invoke(Developer $developer): JsonResponse
     {

@@ -27,7 +27,8 @@ class DeleteGenreAction extends AbstractDeleteEntityAction
     #[OA\Response(response: 403, description: "Access denied - insufficient permissions")]
     #[OA\Response(response: 404, description: "Genre not found")]
     #[OA\Parameter(name: "id", description: "Genre ID", in: "path",
-        required: true, schema: new OA\Schema(type: "integer"))]
+        required: true, schema: new OA\Schema(type: "integer")
+    )]
     #[OA\Tag(name: "Genre")]
     #[Security(name: "bearerAuth")]
     public function __invoke(Genre $genre): Response

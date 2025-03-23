@@ -28,7 +28,8 @@ class DeleteNewsAction extends AbstractDeleteEntityAction
     #[OA\Response(response: 403, description: "Access denied - insufficient permissions")]
     #[OA\Response(response: 404, description: "News not found")]
     #[OA\Parameter(name: "id", description: "News ID", in: "path",
-        required: true, schema: new OA\Schema(type: "integer"))]
+        required: true, schema: new OA\Schema(type: "integer")
+    )]
     #[OA\Tag(name: "News")]
     #[Security(name: "bearerAuth")]
     public function __invoke(News $news): Response

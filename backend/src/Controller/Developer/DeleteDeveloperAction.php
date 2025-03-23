@@ -28,7 +28,8 @@ class DeleteDeveloperAction extends AbstractDeleteEntityAction
     #[OA\Response(response: 403, description: "Access denied - insufficient permissions")]
     #[OA\Response(response: 404, description: "Developer not found")]
     #[OA\Parameter(name: "id", description: "Developer ID", in: "path",
-        required: true, schema: new OA\Schema(type: "integer"))]
+        required: true, schema: new OA\Schema(type: "integer")
+    )]
     #[OA\Tag(name: "Developer")]
     #[Security(name: "bearerAuth")]
     public function __invoke(Developer $developer): Response

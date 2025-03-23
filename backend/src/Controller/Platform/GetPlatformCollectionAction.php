@@ -27,7 +27,8 @@ class GetPlatformCollectionAction extends AbstractGetMetaEntityCollectionAction
             items: new OA\Items(
                 ref: new Model(
                     type: Platform::class,
-                    groups: ["getPlatformCollection"]))))]
+                    groups: ["getPlatformCollection"]
+                ))))]
     #[OA\Tag(name: "Platform")]
     public function __invoke(): JsonResponse
     {

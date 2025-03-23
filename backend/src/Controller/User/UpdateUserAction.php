@@ -65,6 +65,6 @@ class UpdateUserAction extends AbstractUpdateEntityAction
     {
         $content = $request->toArray();
 
-        return $this->updateEntityData($user, $content, $this->fieldConfig, 'getUserr');
+        return $this->updateEntityData($user, $content, $this->fieldConfig, 'getUser');
     }
 }

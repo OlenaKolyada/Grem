@@ -26,12 +26,14 @@ class GetGenreAction extends AbstractGetEntityAction
             items: new OA\Items(
                 ref: new Model(
                     type: Genre::class,
-                    groups: ["getGenre"]))))]
+                    groups: ["getGenre"]
+                ))))]
     #[OA\Parameter(name: "id",
         description: "Genre ID",
         in: "path",
         required: true,
-        schema: new OA\Schema(type: "integer"))]
+        schema: new OA\Schema(type: "integer")
+    )]
     #[OA\Tag(name: "Genre")]
     public function __invoke(Genre $genre): JsonResponse
     {

@@ -24,12 +24,14 @@ class GetCommentAction extends AbstractGetEntityAction
         content: new OA\JsonContent(
             ref: new Model(
                 type: Comment::class,
-                groups: ["getComment"])))]
+                groups: ["getComment"]
+            )))]
     #[OA\Parameter(name: "id",
         description: "Comment ID",
         in: "path",
         required: true,
-        schema: new OA\Schema(type: "integer"))]
+        schema: new OA\Schema(type: "integer")
+    )]
     #[OA\Tag(name: "Comment")]
     public function __invoke(Comment $comment): JsonResponse
     {

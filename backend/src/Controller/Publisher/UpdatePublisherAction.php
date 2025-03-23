@@ -35,7 +35,8 @@ class UpdatePublisherAction extends AbstractUpdateEntityAction
     #[Route('/api/publisher/{id}',
         name: 'app_update_publisher',
         requirements: ['_format' => 'json'],
-        methods: ['PATCH'])]
+        methods: ['PATCH']
+    )]
     #[IsGranted('ROLE_ADMIN', message: 'You do not have sufficient permissions')]
     #[OA\Response(response: 200, description: "Publisher item successfully updated")]
     #[OA\Response(response: 400, description: "Validation failed - invalid data provided")]
