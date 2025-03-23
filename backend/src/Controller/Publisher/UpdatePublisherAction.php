@@ -2,47 +2,34 @@
 
 namespace App\Controller\Publisher;
 
-use App\Controller\Abstract\AbstractEntityController;
+use App\Controller\Abstract\AbstractUpdateEntityAction;
 use App\Entity\Publisher;
-use App\Repository\GameRepository;
-use App\Service\EntityField\FieldManager;
+use App\Service\EntityField\Configuration\EntityConfigurationFactoryInterface;
+use App\Service\EntityField\Processor\ErrorProcessor;
+use App\Service\EntityField\Processor\FieldProcessor;
+use App\Service\EntityField\Processor\ResponseProcessor;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\ConstraintViolationList;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 
-class UpdatePublisherAction extends AbstractEntityController
+class UpdatePublisherAction extends AbstractUpdateEntityAction
 {
     private array $fieldConfig;
 
     public function __construct(
-        EntityManagerInterface          $manager,
-        SerializerInterface             $serializer,
-        ValidatorInterface              $validator,
-        FieldManager                    $fieldManager,
-        private readonly GameRepository $gameRepository
+        EntityManagerInterface $manager,
+        FieldProcessor $fieldProcessor,
+        ErrorProcessor $errorProcessor,
+        ResponseProcessor $responseProcessor,
+        EntityConfigurationFactoryInterface $configFactory
     ) {
-        parent::__construct($manager, $serializer, $validator, $fieldManager);
+        parent::__construct($manager, $fieldProcessor, $errorProcessor, $responseProcessor);
 
-        $this->fieldConfig = [
-            'optional' => ['title', 'slug', 'country', 'website'],
-            'relations' => [
-                'game' => [
-                    'type' => 'collection',
-                    'repository' => $this->gameRepository,
-                    'numericField' => 'id',
-                    'stringField' => 'title',
-                    'clearExisting' => true
-                ]
-            ]
-        ];
+        $this->fieldConfig = $configFactory->createForUpdate('publisher');
     }
 
     #[Route('/api/publisher/{id}',
@@ -68,7 +55,7 @@ class UpdatePublisherAction extends AbstractEntityController
             mediaType: "application/json",
             schema: new OA\Schema(
                 properties: [
-                    new OA\Property(property: "title", type: "string", example: "Edited Unique Developer"),
+                    new OA\Property(property: "title", type: "string", example: "Edited Unique Publisher"),
                     new OA\Property(property: "slug", type: "string", example: ""),
                     new OA\Property(property: "country", type: "string", example: "Finland"),
                     new OA\Property(property: "website", type: "string", example: "https://new-example.com"),
@@ -80,17 +67,7 @@ class UpdatePublisherAction extends AbstractEntityController
     public function __invoke(Request $request, Publisher $publisher): JsonResponse
     {
         $content = $request->toArray();
-        $validationErrors = new ConstraintViolationList();
 
-        $this->processFieldsFromConfig($publisher, $content, $this->fieldConfig, $validationErrors);
-
-        $errorResponse = $this->processErrors($publisher, $validationErrors);
-        if ($errorResponse) {
-            return $errorResponse;
-        }
-
-        $this->manager->flush();
-
-        return $this->createSuccessResponse($publisher, 'getPublisher', Response::HTTP_OK);
+        return $this->updateEntityData($publisher, $content, $this->fieldConfig, 'getPublisher');
     }
 }

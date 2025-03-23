@@ -2,56 +2,34 @@
 
 namespace App\Controller\Tag;
 
-use App\Controller\Abstract\AbstractEntityController;
+use App\Controller\Abstract\AbstractUpdateEntityAction;
 use App\Entity\Tag;
-use App\Repository\NewsRepository;
-use App\Repository\ReviewRepository;
-use App\Service\EntityField\FieldManager;
+use App\Service\EntityField\Configuration\EntityConfigurationFactoryInterface;
+use App\Service\EntityField\Processor\ErrorProcessor;
+use App\Service\EntityField\Processor\FieldProcessor;
+use App\Service\EntityField\Processor\ResponseProcessor;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\ConstraintViolationList;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 
-class UpdateTagAction extends AbstractEntityController
+class UpdateTagAction extends AbstractUpdateEntityAction
 {
     private array $fieldConfig;
 
     public function __construct(
-        EntityManagerInterface            $manager,
-        SerializerInterface               $serializer,
-        ValidatorInterface                $validator,
-        FieldManager                      $fieldManager,
-        private readonly NewsRepository   $newsRepository,
-        private readonly ReviewRepository $reviewRepository
+        EntityManagerInterface $manager,
+        FieldProcessor $fieldProcessor,
+        ErrorProcessor $errorProcessor,
+        ResponseProcessor $responseProcessor,
+        EntityConfigurationFactoryInterface $configFactory
     ) {
-        parent::__construct($manager, $serializer, $validator, $fieldManager);
+        parent::__construct($manager, $fieldProcessor, $errorProcessor, $responseProcessor);
 
-        $this->fieldConfig = [
-            'optional' => ['title', 'slug'],
-            'relations' => [
-                'news' => [
-                    'type' => 'collection',
-                    'repository' => $this->newsRepository,
-                    'numericField' => 'id',
-                    'stringField' => 'title',
-                    'clearExisting' => true
-                ],
-                'review' => [
-                    'type' => 'collection',
-                    'repository' => $this->reviewRepository,
-                    'numericField' => 'id',
-                    'stringField' => 'title',
-                    'clearExisting' => true
-                ],
-            ]
-        ];
+        $this->fieldConfig = $configFactory->createForUpdate('tag');
     }
 
     #[Route('/api/tag/{id}',
@@ -89,17 +67,7 @@ class UpdateTagAction extends AbstractEntityController
     public function __invoke(Request $request, Tag $tag): JsonResponse
     {
         $content = $request->toArray();
-        $validationErrors = new ConstraintViolationList();
 
-        $this->processFieldsFromConfig($tag, $content, $this->fieldConfig, $validationErrors);
-
-        $errorResponse = $this->processErrors($tag, $validationErrors);
-        if ($errorResponse) {
-            return $errorResponse;
-        }
-
-        $this->manager->flush();
-
-        return $this->createSuccessResponse($tag, 'getTag', Response::HTTP_OK);
+        return $this->updateEntityData($tag, $content, $this->fieldConfig, 'getTag');
     }
 }

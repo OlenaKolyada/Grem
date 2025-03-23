@@ -191,4 +191,17 @@ readonly class EntityConfigurationFactory implements EntityConfigurationFactoryI
             'required' => $required
         ];
     }
+
+    public function createForUpdate(string $entityType): array
+    {
+        $config = $this->create($entityType);
+
+        $updateConfig = [
+            'optional' => array_merge($config['required'] ?? [], $config['optional'] ?? []),
+
+            'relations' => $config['relations'] ?? []
+        ];
+
+        return $updateConfig;
+    }
 }

@@ -2,66 +2,34 @@
 
 namespace App\Controller\User;
 
-use App\Controller\Abstract\AbstractEntityController;
+use App\Controller\Abstract\AbstractUpdateEntityAction;
 use App\Entity\User;
-use App\Repository\CommentRepository;
-use App\Repository\NewsRepository;
-use App\Repository\ReviewRepository;
-use App\Service\User\UserEmailService;
-use App\Service\User\UserPasswordService;
+use App\Service\EntityField\Configuration\EntityConfigurationFactoryInterface;
+use App\Service\EntityField\Processor\ErrorProcessor;
+use App\Service\EntityField\Processor\FieldProcessor;
+use App\Service\EntityField\Processor\ResponseProcessor;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Service\EntityField\FieldManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\ConstraintViolationList;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 
-class UpdateUserAction extends AbstractEntityController
+class UpdateUserAction extends AbstractUpdateEntityAction
 {
     private array $fieldConfig;
 
     public function __construct(
-        protected EntityManagerInterface     $manager,
-        protected SerializerInterface        $serializer,
-        protected FieldManager               $fieldManager,
-        protected ValidatorInterface         $validator,
-        private readonly NewsRepository      $newsRepository,
-        private readonly ReviewRepository    $reviewRepository,
-        private readonly CommentRepository   $commentRepository,
-        private readonly UserEmailService    $userEmailService,
-        private readonly UserPasswordService $userPasswordService
+        EntityManagerInterface $manager,
+        FieldProcessor $fieldProcessor,
+        ErrorProcessor $errorProcessor,
+        ResponseProcessor $responseProcessor,
+        EntityConfigurationFactoryInterface $configFactory
     ) {
-        parent::__construct($manager, $serializer, $validator, $fieldManager);
+        parent::__construct($manager, $fieldProcessor, $errorProcessor, $responseProcessor);
 
-        $this->fieldConfig = [
-            'optional' => ['nickname', 'email', 'password', 'roles', 'avatar', 'twitchAccount'],
-            'relations' => [
-                'news' => [
-                    'type' => 'collection',
-                    'repository' => $this->newsRepository,
-                    'numericField' => 'id',
-                    'stringField' => 'title'
-                ],
-                'review' => [
-                    'type' => 'collection',
-                    'repository' => $this->reviewRepository,
-                    'numericField' => 'id',
-                    'stringField' => 'title'
-                ],
-                'comment' => [
-                    'type' => 'collection',
-                    'repository' => $this->commentRepository,
-                    'numericField' => 'id',
-                    'stringField' => 'content'
-                ],
-            ]
-        ];
+        $this->fieldConfig = $configFactory->createForUpdate('user');
     }
 
     #[Route('/api/user/{id}', name: 'app_update_user', requirements: ['_format' => 'json'], methods: ['PATCH'])]
@@ -96,21 +64,7 @@ class UpdateUserAction extends AbstractEntityController
     public function __invoke(Request $request, User $user): JsonResponse
     {
         $content = $request->toArray();
-        $validationErrors = new ConstraintViolationList();
 
-        $emailError = $this->userEmailService->updateEmailIfNeeded($user, $content['email'] ?? null);
-        if ($emailError) {
-            return $emailError;
-        }
-
-        $this->processFieldsFromConfig($user, $content, $this->fieldConfig, $validationErrors);
-
-        $this->userPasswordService->hashPasswordIfNeeded($user, $content['password'] ?? null);
-
-        $errorResponse = $this->processErrors($user, $validationErrors, ['groups' => ['default']]);
-
-        $this->manager->flush();
-
-        return $this->createSuccessResponse($user, 'getUser', Response::HTTP_OK);
+        return $this->updateEntityData($user, $content, $this->fieldConfig, 'getUserr');
     }
 }
