@@ -2,21 +2,21 @@
 
 namespace App\Controller\News;
 
+use App\Controller\Abstract\AbstractGetCoreEntityAction;
 use App\Entity\News;
 use App\Service\CacheService;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
 
-readonly class GetNewsAction
+class GetNewsAction extends AbstractGetCoreEntityAction
 {
     public function __construct(
-        private CacheService $cacheService
+        protected readonly CacheService $cacheService
     ) {
+        parent::__construct($cacheService);
     }
-
     #[Route('/api/news/{id}', name: 'app_get_news_item', methods: ['GET'])]
     #[OA\Response(response: 200,
         description: "Get a News item",
@@ -25,32 +25,23 @@ readonly class GetNewsAction
             items: new OA\Items(
                 ref: new Model(
                     type: News::class,
-                    groups: ["getNews"]))))]
+                    groups: ["getNews"]
+                ))))]
     #[OA\Parameter(name: "id",
         description: "News ID",
         in: "path",
         required: true,
-        schema: new OA\Schema(type: "integer"))]
+        schema: new OA\Schema(type: "integer")
+    )]
     #[OA\Tag(name: "News")]
     public function __invoke(News $news): JsonResponse
     {
-        $idCache = "getNewsAction-" . $news->getId();
-
-        $jsonNews = $this->cacheService->getCachedData(
-            $idCache,
-            "newsCache",
-            function() use ($news) {
-                return $news;
-            },
+        return $this->getEntityData(
+            $news,
+            'News',
+            'news',
             'getNews',
             ['news']
-        );
-
-        return new JsonResponse(
-            $jsonNews,
-            Response::HTTP_OK,
-            [],
-            true
         );
     }
 }

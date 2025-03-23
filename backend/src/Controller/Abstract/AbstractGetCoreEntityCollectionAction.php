@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * @template T
  */
-abstract class AbstractCoreEntityCollectionAction
+abstract class AbstractGetCoreEntityCollectionAction
 {
     use PaginationTrait;
 

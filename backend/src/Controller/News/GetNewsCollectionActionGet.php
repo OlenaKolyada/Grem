@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Controller\Review;
+namespace App\Controller\News;
 
-use App\Controller\Abstract\AbstractCoreEntityCollectionAction;
-use App\Entity\Review;
-use App\Repository\ReviewRepository;
+use App\Controller\Abstract\AbstractGetCoreEntityCollectionAction;
+use App\Entity\News;
+use App\Repository\NewsRepository;
 use App\Service\CacheService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,24 +12,24 @@ use Symfony\Component\Routing\Attribute\Route;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
 
-class GetReviewCollectionAction extends AbstractCoreEntityCollectionAction
+class GetNewsCollectionActionGet extends AbstractGetCoreEntityCollectionAction
 {
     public function __construct(
-        ReviewRepository $repository,
+        NewsRepository $repository,
         CacheService $cacheService
     ) {
         parent::__construct($repository, $cacheService);
     }
 
-    #[Route('/api/review', name: 'api_get_review_collection', methods: ['GET'])]
+    #[Route('/api/news', name: 'api_get_news_collection', methods: ['GET'])]
     #[OA\Response(response: 200,
-        description: "Get a Review collection",
+        description: "Get a News collection",
         content: new OA\JsonContent(
             type: "array",
             items: new OA\Items(
                 ref: new Model(
-                    type: Review::class,
-                    groups: ["getReviewCollection"]
+                    type: News::class,
+                    groups: ["getNewsCollection"]
                 ))))]
     #[OA\Parameter(
         name: "page",
@@ -53,21 +53,21 @@ class GetReviewCollectionAction extends AbstractCoreEntityCollectionAction
     )]
     #[OA\Parameter(
         name: "status",
-        description: "Review status",
+        description: "News status",
         in: "query",
         schema: new OA\Schema(
             type: "string",
             enum: ["Published", "Draft", "Archived", "Deleted"]
         ))]
-    #[OA\Tag(name: "Review")]
+    #[OA\Tag(name: "News")]
     public function __invoke(Request $request): JsonResponse
     {
         return $this->getEntityData(
             $request,
-            'Review',
-            'review',
-            'getReviewCollection',
-            ['review']
+            'News',
+            'news',
+            'getNewsCollection',
+            ['news']
         );
     }
 }
