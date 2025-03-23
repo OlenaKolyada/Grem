@@ -2,22 +2,23 @@
 
 namespace App\Controller\Comment;
 
+use App\Controller\Abstract\AbstractGetMetaEntityCollectionAction;
 use App\Entity\Comment;
 use App\Repository\CommentRepository;
 use App\Service\CacheService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
 
-readonly class GetCommentCollectionAction
+class GetCommentCollectionAction extends AbstractGetMetaEntityCollectionAction
 {
     public function __construct(
-        private CommentRepository $repository,
-        private CacheService $cacheService
+        CommentRepository $repository,
+        CacheService $cacheService
     ) {
+        parent::__construct($repository, $cacheService);
     }
 
     #[Route('/api/comment', name: 'api_get_comment_collection', methods: ['GET'])]
@@ -27,8 +28,8 @@ readonly class GetCommentCollectionAction
             type: "array",
             items: new OA\Items(
                 ref: new Model(
-                type: Comment::class,
-                groups: ["getCommentCollection"]))))]
+                    type: Comment::class,
+                    groups: ["getCommentCollection"]))))]
     #[OA\Parameter(name: "status",
         description: "Comment status",
         in: "query",
@@ -45,26 +46,13 @@ readonly class GetCommentCollectionAction
             $criteria['status'] = $status;
         }
 
-        $idCache = "getCommentCollectionAction";
-        if ($status) {
-            $idCache .= "-" . $status;
-        }
-
-        $jsonData = $this->cacheService->getCachedData(
-            $idCache,
-            "commentCache",
-            function() use ($criteria) {
-                return $this->repository->findBy($criteria);
-            },
+        return $this->getEntityData(
+            'Comment',
+            'comment',
             'getCommentCollection',
-            ['comment']
-        );
-
-        return new JsonResponse(
-            $jsonData,
-            Response::HTTP_OK,
-            [],
-            true
+            ['comment'],
+            $criteria,
+            $status
         );
     }
 }
