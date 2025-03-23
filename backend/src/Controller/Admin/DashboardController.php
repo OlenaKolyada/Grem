@@ -31,7 +31,7 @@ class DashboardController extends AbstractDashboardController
                 [
                     'title' => 'Site',
                     'icon' => 'fa-solid fa-city',
-                    'url' => 'http://localhost:80/',
+                    'url' => 'http://localhost:3000/',
                 ],
                 [
                     'title' => 'News',
@@ -86,7 +86,7 @@ class DashboardController extends AbstractDashboardController
                 [
                     'title' => 'Documentation',
                     'icon' => 'fa-solid fa-file',
-                    'url' => 'http://localhost:8001/api/doc',
+                    'url' => 'http://localhost:8000/api/doc',
                 ],
             ],
         ]);

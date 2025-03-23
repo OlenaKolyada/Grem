@@ -17,10 +17,9 @@ export function DetailedListContainer({
                                           relatedCategoryNames = [],
                                           defaultStatus
                                       }: DetailedListProps) {
-    // Получаем параметры списка из URL
+
     const { status } = useListParams(defaultStatus);
 
-    // Функция для рендеринга карточки сущности
     const renderEntityCard = (
         entityItem: Entity,
         categoryName: string,

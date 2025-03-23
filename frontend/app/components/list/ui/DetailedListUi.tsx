@@ -13,7 +13,6 @@ export function DetailedListUi({
                                    status
                                }: DetailedListLayoutProps) {
 
-    // Используем хук для подготовки данных сетки
     const { rows, hasContent } = useGridData(
         renderEntityCard,
         entityItems,
@@ -23,7 +22,6 @@ export function DetailedListUi({
         status
     );
 
-    // Если нет содержимого, не рендерим ничего
     if (!hasContent) {
         return null;
     }

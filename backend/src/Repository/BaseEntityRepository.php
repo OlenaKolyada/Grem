@@ -6,19 +6,31 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 abstract class BaseEntityRepository extends ServiceEntityRepository
 {
-    public function findByWithPagination(array $criteria, int $page, int $limit): array
+    public function findLatest(): ?object
     {
-        $qb = $this->createQueryBuilder('e');
+        $alias = $this->getAlias();
+        return $this->createQueryBuilder($alias)
+            ->andWhere("$alias.status = :status")
+            ->setParameter('status', 'Published')
+            ->orderBy("$alias.updatedAt", 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 
-        if (isset($criteria['status'])) {
-            $qb->andWhere('e.status = :status')
-                ->setParameter('status', $criteria['status']);
-        } else {
-            $qb->andWhere('e.status = :defaultStatus')
-                ->setParameter('defaultStatus', 'Published');
-        }
+    public function findByStatusWithSorting(
+        string $status,
+        int $page,
+        int $limit,
+        string $sortField,
+        string $sortDirection
+    ): array {
+        $alias = $this->getAlias();
 
-        $qb->orderBy('e.updatedAt', 'DESC');
+        $qb = $this->createQueryBuilder($alias)
+            ->where("$alias.status = :status")
+            ->setParameter('status', $status)
+            ->orderBy("$alias.$sortField", $sortDirection);
 
         $totalQb = clone $qb;
         $totalItems = count($totalQb->getQuery()->getResult());
@@ -26,8 +38,10 @@ abstract class BaseEntityRepository extends ServiceEntityRepository
         $qb->setFirstResult(($page - 1) * $limit)
             ->setMaxResults($limit);
 
+        $items = $qb->getQuery()->getResult();
+
         return [
-            'items' => $qb->getQuery()->getResult(),
+            'items' => $items,
             'pagination' => [
                 'totalItems' => $totalItems,
                 'page' => $page,
@@ -37,14 +51,8 @@ abstract class BaseEntityRepository extends ServiceEntityRepository
         ];
     }
 
-    public function findLatest(): ?object
+    protected function getAlias(): string
     {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.status = :status')
-            ->setParameter('status', 'Published')
-            ->orderBy('e.updatedAt', 'DESC')
-            ->setMaxResults(1)
-            ->getQuery()
-            ->getOneOrNullResult();
+        return 'e';
     }
 }

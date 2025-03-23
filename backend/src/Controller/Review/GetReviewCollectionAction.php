@@ -31,41 +31,71 @@ readonly class GetReviewCollectionAction
             items: new OA\Items(
                 ref: new Model(
                     type: Review::class,
-                    groups: ["getReviewCollection"]))))]
+                    groups: ["getReviewCollection"]
+    ))))]
     #[OA\Parameter(
         name: "page",
         description: "Page number",
         in: "query",
-        schema: new OA\Schema(type: "integer"))]
+        schema: new OA\Schema(type: "integer")
+    )]
     #[OA\Parameter(
         name: "limit",
         description: "Number of items per page",
         in: "query",
-        schema: new OA\Schema(type: "integer"))]
+        schema: new OA\Schema(type: "integer")
+    )]
+    #[OA\Parameter(
+        name: "sort",
+        description: "Sorting format: field:direction (e.g. updatedAt:desc)",
+        in: "query",
+        schema: new OA\Schema(
+            type: "string",
+            example: "updatedAt:desc")
+    )]
     #[OA\Parameter(
         name: "status",
         description: "Review status",
         in: "query",
         schema: new OA\Schema(
             type: "string",
-            enum: ["Published", "Draft", "Archived", "Deleted"]))]
+            enum: ["Published", "Draft", "Archived", "Deleted"]
+    ))]
     #[OA\Tag(name: "Review")]
     public function __invoke(Request $request): JsonResponse
     {
         $pagination = $this->preparePaginationCriteria($request);
-
         $status = $pagination['criteria']['status'] ?? 'Published';
+
+        $sortParam = $request->query->get('sort', 'updatedAt:desc');
+        [$sortField, $sortDirection] = explode(':', $sortParam);
+
+        $sortField = $sortField ?? 'updatedAt';
+        $sortDirection = strtolower($sortDirection ?? 'desc') === 'asc' ? 'ASC' : 'DESC';
+
+        $allowedSortFields = ['updatedAt', 'createdAt'];
+        if (!in_array($sortField, $allowedSortFields, true)) {
+            throw new \InvalidArgumentException('Invalid sort field');
+        }
+
         $idCache = "getReviewCollectionAction-" .
-            $pagination['page'] . "-" . $pagination['limit'] . "-" . $status;
+            $pagination['page'] . "-" .
+            $pagination['limit'] . "-" .
+            $status . "-" .
+            $sortField . "-" .
+            strtolower($sortDirection);
+
 
         $jsonData = $this->cacheService->getCachedData(
             $idCache,
             "reviewCache",
-            function() use ($pagination) {
-                return $this->repository->findByWithPagination(
-                    $pagination['criteria'],
+            function() use ($pagination, $status, $sortField, $sortDirection) {
+                return $this->repository->findByStatusWithSorting(
+                    $status,
                     $pagination['page'],
-                    $pagination['limit']
+                    $pagination['limit'],
+                    $sortField,
+                    $sortDirection
                 );
             },
             'getReviewCollection',
