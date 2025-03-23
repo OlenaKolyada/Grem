@@ -2,19 +2,20 @@
 
 namespace App\Controller\Platform;
 
+use App\Controller\Abstract\AbstractGetEntityAction;
 use App\Entity\Platform;
 use App\Service\CacheService;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
 
-readonly class GetPlatformAction
+class GetPlatformAction extends AbstractGetEntityAction
 {
     public function __construct(
-        private CacheService $cacheService
+        protected readonly CacheService $cacheService
     ) {
+        parent::__construct($cacheService);
     }
 
     #[Route('/api/platform/{id}', name: 'app_get_platform_item', methods: ['GET'])]
@@ -34,23 +35,12 @@ readonly class GetPlatformAction
     #[OA\Tag(name: "Platform")]
     public function __invoke(Platform $platform): JsonResponse
     {
-        $idCache = "getPlatformAction-" . $platform->getId();
-
-        $jsonPlatform = $this->cacheService->getCachedData(
-            $idCache,
-            "platformCache",
-            function() use ($platform) {
-                return $platform;
-            },
+        return $this->getEntityData(
+            $platform,
+            'Platform',
+            'platform',
             'getPlatform',
             ['platform']
-        );
-
-        return new JsonResponse(
-            $jsonPlatform,
-            Response::HTTP_OK,
-            [],
-            true
         );
     }
 }

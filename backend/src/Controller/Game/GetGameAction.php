@@ -2,7 +2,7 @@
 
 namespace App\Controller\Game;
 
-use App\Controller\Abstract\AbstractGetCoreEntityAction;
+use App\Controller\Abstract\AbstractGetEntityAction;
 use App\Entity\Game;
 use App\Service\CacheService;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
 
-class GetGameAction extends AbstractGetCoreEntityAction
+class GetGameAction extends AbstractGetEntityAction
 {
     public function __construct(
         protected readonly CacheService $cacheService

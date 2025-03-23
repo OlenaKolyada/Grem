@@ -8,9 +8,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * @template T
- */
 abstract class AbstractGetCoreEntityCollectionAction
 {
     use PaginationTrait;
@@ -20,7 +17,6 @@ abstract class AbstractGetCoreEntityCollectionAction
         protected readonly CacheService $cacheService
     ) {
     }
-
     protected function getEntityData(
         Request $request,
         string $entityType,

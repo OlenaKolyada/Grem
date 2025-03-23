@@ -6,17 +6,12 @@ use App\Service\CacheService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * @template T
- */
-
-abstract class AbstractGetCoreEntityAction
+abstract class AbstractGetEntityAction
 {
     public function __construct(
         protected readonly CacheService $cacheService
     ) {
     }
-
     protected function getEntityData(
         object $entity,
         string $entityType,

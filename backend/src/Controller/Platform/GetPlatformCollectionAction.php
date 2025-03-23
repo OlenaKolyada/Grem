@@ -2,21 +2,22 @@
 
 namespace App\Controller\Platform;
 
+use App\Controller\Abstract\AbstractGetMetaEntityCollectionAction;
 use App\Entity\Platform;
 use App\Repository\PlatformRepository;
 use App\Service\CacheService;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
 
-readonly class GetPlatformCollectionAction
+class GetPlatformCollectionAction extends AbstractGetMetaEntityCollectionAction
 {
     public function __construct(
-        private PlatformRepository $repository,
-        private CacheService $cacheService
+        PlatformRepository $repository,
+        CacheService $cacheService
     ) {
+        parent::__construct($repository, $cacheService);
     }
     #[Route('/api/platform', name: 'app_get_platform_collection', methods: ['GET'])]
     #[OA\Response(response: 200,
@@ -30,23 +31,11 @@ readonly class GetPlatformCollectionAction
     #[OA\Tag(name: "Platform")]
     public function __invoke(): JsonResponse
     {
-        $idCache = "getPlatformCollectionAction";
-
-        $jsonData = $this->cacheService->getCachedData(
-            $idCache,
-            "platformCache",
-            function() {
-                return $this->repository->findAll();
-            },
+        return $this->getEntityData(
+            'Platform',
+            'platform',
             'getPlatformCollection',
             ['platform']
-        );
-
-        return new JsonResponse(
-            $jsonData,
-            Response::HTTP_OK,
-            [],
-            true
         );
     }
 }

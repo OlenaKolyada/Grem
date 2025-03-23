@@ -2,19 +2,20 @@
 
 namespace App\Controller\Tag;
 
+use App\Controller\Abstract\AbstractGetEntityAction;
 use App\Entity\Tag;
 use App\Service\CacheService;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
 
-readonly class GetTagAction
+class GetTagAction extends AbstractGetEntityAction
 {
     public function __construct(
-        private CacheService $cacheService
+        protected readonly CacheService $cacheService
     ) {
+        parent::__construct($cacheService);
     }
 
     #[Route('/api/tag/{id}', name: 'app_get_tag_item', methods: ['GET'])]
@@ -34,23 +35,12 @@ readonly class GetTagAction
     #[OA\Tag(name: "Tag")]
     public function __invoke(Tag $tag): JsonResponse
     {
-        $idCache = "getTagAction-" . $tag->getId();
-
-        $jsonTag = $this->cacheService->getCachedData(
-            $idCache,
-            "tagCache",
-            function() use ($tag) {
-                return $tag;
-            },
+        return $this->getEntityData(
+            $tag,
+            'Tag',
+            'tag',
             'getTag',
             ['tag']
-        );
-
-        return new JsonResponse(
-            $jsonTag,
-            Response::HTTP_OK,
-            [],
-            true
         );
     }
 }

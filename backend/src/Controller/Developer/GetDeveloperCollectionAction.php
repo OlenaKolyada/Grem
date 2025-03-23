@@ -2,21 +2,22 @@
 
 namespace App\Controller\Developer;
 
+use App\Controller\Abstract\AbstractGetMetaEntityCollectionAction;
 use App\Entity\Developer;
 use App\Repository\DeveloperRepository;
 use App\Service\CacheService;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
 
-readonly class GetDeveloperCollectionAction
+class GetDeveloperCollectionAction extends AbstractGetMetaEntityCollectionAction
 {
     public function __construct(
-        private DeveloperRepository $repository,
-        private CacheService $cacheService
+        DeveloperRepository $repository,
+        CacheService $cacheService
     ) {
+        parent::__construct($repository, $cacheService);
     }
 
     #[Route('/api/developer', name: 'app_get_developer_collection', methods: ['GET'])]
@@ -26,28 +27,17 @@ readonly class GetDeveloperCollectionAction
             type: "array",
             items: new OA\Items(
                 ref: new Model(
-                type: Developer::class,
-                groups: ["getDeveloperCollection"]))))]
+                    type: Developer::class,
+                    groups: ["getDeveloperCollection"]
+                ))))]
     #[OA\Tag(name: "Developer")]
     public function __invoke(): JsonResponse
     {
-        $idCache = "getDeveloperCollectionAction";
-
-        $jsonData = $this->cacheService->getCachedData(
-            $idCache,
-            "developerCache",
-            function() {
-                return $this->repository->findAll();
-            },
+        return $this->getEntityData(
+            'Developer',
+            'developer',
             'getDeveloperCollection',
             ['developer']
-        );
-
-        return new JsonResponse(
-            $jsonData,
-            Response::HTTP_OK,
-            [],
-            true
         );
     }
 }

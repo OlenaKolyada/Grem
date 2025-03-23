@@ -2,19 +2,20 @@
 
 namespace App\Controller\Comment;
 
+use App\Controller\Abstract\AbstractGetEntityAction;
 use App\Entity\Comment;
 use App\Service\CacheService;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
 
-readonly class GetCommentAction
+class GetCommentAction extends AbstractGetEntityAction
 {
     public function __construct(
-        private CacheService $cacheService
+        protected readonly CacheService $cacheService
     ) {
+        parent::__construct($cacheService);
     }
 
     #[Route('/api/comment/{id}', name: 'app_get_comment_item', methods: ['GET'])]
@@ -32,23 +33,12 @@ readonly class GetCommentAction
     #[OA\Tag(name: "Comment")]
     public function __invoke(Comment $comment): JsonResponse
     {
-        $idCache = "getCommentAction-" . $comment->getId();
-
-        $jsonData = $this->cacheService->getCachedData(
-            $idCache,
-            "commentCache",
-            function() use ($comment) {
-                return $comment;
-            },
+        return $this->getEntityData(
+            $comment,
+            'Comment',
+            'comment',
             'getComment',
             ['comment']
-        );
-
-        return new JsonResponse(
-            $jsonData,
-            Response::HTTP_OK,
-            [],
-            true
         );
     }
 }

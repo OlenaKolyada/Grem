@@ -2,19 +2,20 @@
 
 namespace App\Controller\Developer;
 
+use App\Controller\Abstract\AbstractGetEntityAction;
 use App\Entity\Developer;
 use App\Service\CacheService;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
 
-readonly class GetDeveloperAction
+class GetDeveloperAction extends AbstractGetEntityAction
 {
     public function __construct(
-        private CacheService $cacheService
+        protected readonly CacheService $cacheService
     ) {
+        parent::__construct($cacheService);
     }
 
     #[Route('/api/developer/{id}', name: 'app_get_developer_item', methods: ['GET'])]
@@ -34,23 +35,12 @@ readonly class GetDeveloperAction
     #[OA\Tag(name: "Developer")]
     public function __invoke(Developer $developer): JsonResponse
     {
-        $idCache = "getDeveloperAction-" . $developer->getId();
-
-        $jsonDeveloper = $this->cacheService->getCachedData(
-            $idCache,
-            "developerCache",
-            function() use ($developer) {
-                return $developer;
-            },
+        return $this->getEntityData(
+            $developer,
+            'Developer',
+            'developer',
             'getDeveloper',
             ['developer']
-        );
-
-        return new JsonResponse(
-            $jsonDeveloper,
-            Response::HTTP_OK,
-            [],
-            true
         );
     }
 }

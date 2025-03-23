@@ -2,21 +2,22 @@
 
 namespace App\Controller\Tag;
 
+use App\Controller\Abstract\AbstractGetMetaEntityCollectionAction;
 use App\Entity\Tag;
 use App\Repository\TagRepository;
 use App\Service\CacheService;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
 
-readonly class GetTagCollectionAction
+class GetTagCollectionAction extends AbstractGetMetaEntityCollectionAction
 {
     public function __construct(
-        private TagRepository $repository,
-        private CacheService $cacheService
+        TagRepository $repository,
+        CacheService $cacheService
     ) {
+        parent::__construct($repository, $cacheService);
     }
     #[Route('/api/tag', name: 'app_get_tag_collection', methods: ['GET'])]
     #[OA\Response(response: 200,
@@ -30,23 +31,11 @@ readonly class GetTagCollectionAction
     #[OA\Tag(name: "Tag")]
     public function __invoke(): JsonResponse
     {
-        $idCache = "getTagCollectionAction";
-
-        $jsonData = $this->cacheService->getCachedData(
-            $idCache,
-            "tagCache",
-            function() {
-                return $this->repository->findAll();
-            },
+        return $this->getEntityData(
+            'Tag',
+            'tag',
             'getTagCollection',
             ['tag']
-        );
-
-        return new JsonResponse(
-            $jsonData,
-            Response::HTTP_OK,
-            [],
-            true
         );
     }
 }

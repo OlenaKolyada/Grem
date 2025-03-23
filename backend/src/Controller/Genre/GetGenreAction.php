@@ -2,19 +2,20 @@
 
 namespace App\Controller\Genre;
 
+use App\Controller\Abstract\AbstractGetEntityAction;
 use App\Entity\Genre;
 use App\Service\CacheService;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
 
-readonly class GetGenreAction
+class GetGenreAction extends AbstractGetEntityAction
 {
     public function __construct(
-        private CacheService $cacheService
+        protected readonly CacheService $cacheService
     ) {
+        parent::__construct($cacheService);
     }
 
     #[Route('/api/genre/{id}', name: 'app_get_genre_item', methods: ['GET'])]
@@ -34,23 +35,12 @@ readonly class GetGenreAction
     #[OA\Tag(name: "Genre")]
     public function __invoke(Genre $genre): JsonResponse
     {
-        $idCache = "getGenreAction-" . $genre->getId();
-
-        $jsonGenre = $this->cacheService->getCachedData(
-            $idCache,
-            "genreCache",
-            function() use ($genre) {
-                return $genre;
-            },
+        return $this->getEntityData(
+            $genre,
+            'Genre',
+            'genre',
             'getGenre',
             ['genre']
-        );
-
-        return new JsonResponse(
-            $jsonGenre,
-            Response::HTTP_OK,
-            [],
-            true
         );
     }
 }

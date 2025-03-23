@@ -2,19 +2,20 @@
 
 namespace App\Controller\Publisher;
 
+use App\Controller\Abstract\AbstractGetEntityAction;
 use App\Entity\Publisher;
 use App\Service\CacheService;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
 
-readonly class GetPublisherAction
+class GetPublisherAction extends AbstractGetEntityAction
 {
     public function __construct(
-        private CacheService $cacheService
+        protected readonly CacheService $cacheService
     ) {
+        parent::__construct($cacheService);
     }
 
     #[Route('/api/publisher/{id}', name: 'app_get_publisher_item', methods: ['GET'])]
@@ -34,23 +35,12 @@ readonly class GetPublisherAction
     #[OA\Tag(name: "Publisher")]
     public function __invoke(Publisher $publisher): JsonResponse
     {
-        $idCache = "getPublisherAction-" . $publisher->getId();
-
-        $jsonPublisher = $this->cacheService->getCachedData(
-            $idCache,
-            "publisherCache",
-            function() use ($publisher) {
-                return $publisher;
-            },
+        return $this->getEntityData(
+            $publisher,
+            'Publisher',
+            'publisher',
             'getPublisher',
             ['publisher']
-        );
-
-        return new JsonResponse(
-            $jsonPublisher,
-            Response::HTTP_OK,
-            [],
-            true
         );
     }
 }

@@ -24,16 +24,17 @@ class GetUserAction extends AbstractController
         content: new OA\JsonContent(
             ref: new Model(
                 type: User::class,
-                groups: ["getUser"])))]
+                groups: ["getUser"]
+            )))]
     #[OA\Parameter(name: "id",
         description: "User ID",
         in: "path",
         required: true,
-        schema: new OA\Schema(type: "integer"))]
+        schema: new OA\Schema(type: "integer")
+    )]
     #[OA\Tag(name: "User")]
     public function __invoke(User $user): JsonResponse
     {
-        // Проверка авторизации
         if (!$this->getUser()) {
             return new JsonResponse(['error' => 'Not authenticated'], Response::HTTP_UNAUTHORIZED);
         }
