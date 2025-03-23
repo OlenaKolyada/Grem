@@ -2,25 +2,23 @@
 
 namespace App\Controller\Game;
 
+use App\Controller\Abstract\AbstractCoreEntityCollectionAction;
 use App\Entity\Game;
 use App\Repository\GameRepository;
 use App\Service\CacheService;
-use App\Trait\PaginationTrait;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
 
-readonly class GetGameCollectionAction
+class GetGameCollectionAction extends AbstractCoreEntityCollectionAction
 {
-    use PaginationTrait;
-
     public function __construct(
-        private GameRepository $repository,
-        private CacheService $cacheService
+        GameRepository $repository,
+        CacheService $cacheService
     ) {
+        parent::__construct($repository, $cacheService);
     }
 
     #[Route('/api/game', name: 'api_get_game_collection', methods: ['GET'])]
@@ -32,7 +30,7 @@ readonly class GetGameCollectionAction
                 ref: new Model(
                     type: Game::class,
                     groups: ["getGameCollection"]
-    ))))]
+                ))))]
     #[OA\Parameter(name: "page",
         description: "Page number",
         in: "query",
@@ -57,53 +55,16 @@ readonly class GetGameCollectionAction
         schema: new OA\Schema(
             type: "string",
             enum: ["Published", "Draft", "Archived", "Deleted"]
-    ))]
+        ))]
     #[OA\Tag(name: "Game")]
     public function __invoke(Request $request): JsonResponse
     {
-        $pagination = $this->preparePaginationCriteria($request);
-        $status = $pagination['criteria']['status'] ?? 'Published';
-
-        $sortParam = $request->query->get('sort', 'updatedAt:desc');
-        [$sortField, $sortDirection] = explode(':', $sortParam);
-
-        $sortField = $sortField ?? 'updatedAt';
-        $sortDirection = strtolower($sortDirection ?? 'desc') === 'asc' ? 'ASC' : 'DESC';
-
-        $allowedSortFields = ['updatedAt', 'createdAt'];
-        if (!in_array($sortField, $allowedSortFields, true)) {
-            throw new \InvalidArgumentException('Invalid sort field');
-        }
-
-        $idCache = "getGameCollectionAction-" .
-            $pagination['page'] . "-" .
-            $pagination['limit'] . "-" .
-            $status . "-" .
-            $sortField . "-" .
-            strtolower($sortDirection);
-
-
-        $jsonData = $this->cacheService->getCachedData(
-            $idCache,
-            "gameCache",
-            function() use ($pagination, $status, $sortField, $sortDirection) {
-                return $this->repository->findByStatusWithSorting(
-                    $status,
-                    $pagination['page'],
-                    $pagination['limit'],
-                    $sortField,
-                    $sortDirection
-                );
-            },
+        return $this->getEntityData(
+            $request,
+            'Game',
+            'game',
             'getGameCollection',
             ['game']
-        );
-
-        return new JsonResponse(
-            $jsonData,
-            Response::HTTP_OK,
-            [],
-            true
         );
     }
 }

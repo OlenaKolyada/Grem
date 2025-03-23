@@ -2,25 +2,23 @@
 
 namespace App\Controller\Review;
 
+use App\Controller\Abstract\AbstractCoreEntityCollectionAction;
 use App\Entity\Review;
 use App\Repository\ReviewRepository;
 use App\Service\CacheService;
-use App\Trait\PaginationTrait;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
 
-readonly class GetReviewCollectionAction
+class GetReviewCollectionAction extends AbstractCoreEntityCollectionAction
 {
-    use PaginationTrait;
-
     public function __construct(
-        private ReviewRepository $repository,
-        private CacheService $cacheService
+        ReviewRepository $repository,
+        CacheService $cacheService
     ) {
+        parent::__construct($repository, $cacheService);
     }
 
     #[Route('/api/review', name: 'api_get_review_collection', methods: ['GET'])]
@@ -32,7 +30,7 @@ readonly class GetReviewCollectionAction
                 ref: new Model(
                     type: Review::class,
                     groups: ["getReviewCollection"]
-    ))))]
+                ))))]
     #[OA\Parameter(
         name: "page",
         description: "Page number",
@@ -60,53 +58,16 @@ readonly class GetReviewCollectionAction
         schema: new OA\Schema(
             type: "string",
             enum: ["Published", "Draft", "Archived", "Deleted"]
-    ))]
+        ))]
     #[OA\Tag(name: "Review")]
     public function __invoke(Request $request): JsonResponse
     {
-        $pagination = $this->preparePaginationCriteria($request);
-        $status = $pagination['criteria']['status'] ?? 'Published';
-
-        $sortParam = $request->query->get('sort', 'updatedAt:desc');
-        [$sortField, $sortDirection] = explode(':', $sortParam);
-
-        $sortField = $sortField ?? 'updatedAt';
-        $sortDirection = strtolower($sortDirection ?? 'desc') === 'asc' ? 'ASC' : 'DESC';
-
-        $allowedSortFields = ['updatedAt', 'createdAt'];
-        if (!in_array($sortField, $allowedSortFields, true)) {
-            throw new \InvalidArgumentException('Invalid sort field');
-        }
-
-        $idCache = "getReviewCollectionAction-" .
-            $pagination['page'] . "-" .
-            $pagination['limit'] . "-" .
-            $status . "-" .
-            $sortField . "-" .
-            strtolower($sortDirection);
-
-
-        $jsonData = $this->cacheService->getCachedData(
-            $idCache,
-            "reviewCache",
-            function() use ($pagination, $status, $sortField, $sortDirection) {
-                return $this->repository->findByStatusWithSorting(
-                    $status,
-                    $pagination['page'],
-                    $pagination['limit'],
-                    $sortField,
-                    $sortDirection
-                );
-            },
+        return $this->getEntityData(
+            $request,
+            'Review',
+            'review',
             'getReviewCollection',
             ['review']
-        );
-
-        return new JsonResponse(
-            $jsonData,
-            Response::HTTP_OK,
-            [],
-            true
         );
     }
 }
