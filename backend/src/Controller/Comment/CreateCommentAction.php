@@ -2,54 +2,34 @@
 
 namespace App\Controller\Comment;
 
-use App\Controller\Abstract\AbstractEntityController;
+use App\Controller\Abstract\AbstractCreateEntityAction;
 use App\Entity\Comment;
-use App\Repository\UserRepository;
-use App\Repository\ReviewRepository;
-use App\Service\EntityField\FieldManager;
+use App\Service\EntityField\Configuration\EntityConfigurationFactoryInterface;
+use App\Service\EntityField\Processor\ErrorProcessor;
+use App\Service\EntityField\Processor\FieldProcessor;
+use App\Service\EntityField\Processor\ResponseProcessor;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\ConstraintViolationList;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 
-class CreateCommentAction extends AbstractEntityController
+class CreateCommentAction extends AbstractCreateEntityAction
 {
     private array $fieldConfig;
-    public function __construct(
-        protected EntityManagerInterface  $manager,
-        protected SerializerInterface     $serializer,
-        protected FieldManager            $fieldManager,
-        protected ValidatorInterface      $validator,
-        private readonly UserRepository   $userRepository,
-        private readonly ReviewRepository $reviewRepository,
-    ) {
-        parent::__construct($manager, $serializer, $validator, $fieldManager);
 
-        $this->fieldConfig = [
-            'required' => ['content', 'status'],
-            'optional' => ['country', 'website'],
-            'relations' => [
-                'author' => [
-                    'type' => 'entity',
-                    'repository' => $this->userRepository,
-                    'numericField' => 'id',
-                    'stringField' => 'title'
-                ],
-                'review' => [
-                    'type' => 'entity',
-                    'repository' => $this->reviewRepository,
-                    'numericField' => 'id',
-                    'stringField' => 'title'
-                ]
-            ]
-        ];
+    public function __construct(
+        EntityManagerInterface $manager,
+        FieldProcessor $fieldProcessor,
+        ErrorProcessor $errorProcessor,
+        ResponseProcessor $responseProcessor,
+        EntityConfigurationFactoryInterface $configFactory
+    ) {
+        parent::__construct($manager, $fieldProcessor, $errorProcessor, $responseProcessor);
+
+        $this->fieldConfig = $configFactory->create('comment');
     }
 
     #[Route('/api/comment',
@@ -80,22 +60,11 @@ class CreateCommentAction extends AbstractEntityController
     #[Security(name: "bearerAuth")]
     public function __invoke(
         Request $request
-    ): JsonResponse {
-
+    ): JsonResponse
+    {
         $content = $request->toArray();
         $comment = new Comment();
-        $validationErrors = new ConstraintViolationList();
 
-        $this->processFieldsFromConfig($comment, $content, $this->fieldConfig, $validationErrors);
-
-        $errorResponse = $this->processErrors($comment, $validationErrors);
-        if ($errorResponse) {
-            return $errorResponse;
-        }
-
-        $this->manager->persist($comment);
-        $this->manager->flush();
-
-        return $this->createSuccessResponse($comment, 'getComment', Response::HTTP_CREATED);
+        return $this->createEntityData($comment, $content, $this->fieldConfig, 'getComment');
     }
 }

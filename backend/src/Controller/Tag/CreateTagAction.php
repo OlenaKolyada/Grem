@@ -2,55 +2,34 @@
 
 namespace App\Controller\Tag;
 
-use App\Controller\Abstract\AbstractEntityController;
+use App\Controller\Abstract\AbstractCreateEntityAction;
 use App\Entity\Tag;
-use App\Repository\NewsRepository;
-use App\Repository\ReviewRepository;
-use App\Service\EntityField\FieldManager;
+use App\Service\EntityField\Configuration\EntityConfigurationFactoryInterface;
+use App\Service\EntityField\Processor\ErrorProcessor;
+use App\Service\EntityField\Processor\FieldProcessor;
+use App\Service\EntityField\Processor\ResponseProcessor;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\ConstraintViolationList;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 
-class CreateTagAction extends AbstractEntityController
+class CreateTagAction extends AbstractCreateEntityAction
 {
     private array $fieldConfig;
 
     public function __construct(
-        protected EntityManagerInterface  $manager,
-        protected SerializerInterface     $serializer,
-        protected FieldManager            $fieldManager,
-        protected ValidatorInterface      $validator,
-        private readonly NewsRepository   $newsRepository,
-        private readonly ReviewRepository $reviewRepository
+        EntityManagerInterface $manager,
+        FieldProcessor $fieldProcessor,
+        ErrorProcessor $errorProcessor,
+        ResponseProcessor $responseProcessor,
+        EntityConfigurationFactoryInterface $configFactory
     ) {
-        parent::__construct($manager, $serializer, $validator, $fieldManager);
+        parent::__construct($manager, $fieldProcessor, $errorProcessor, $responseProcessor);
 
-        $this->fieldConfig = [
-            'required' => ['title'],
-            'optional' => ['slug'],
-            'relations' => [
-                'news' => [
-                    'type' => 'collection',
-                    'repository' => $this->newsRepository,
-                    'numericField' => 'id',
-                    'stringField' => 'title'
-                ],
-                'review' => [
-                    'type' => 'collection',
-                    'repository' => $this->reviewRepository,
-                    'numericField' => 'id',
-                    'stringField' => 'title'
-                ]
-            ]
-        ];
+        $this->fieldConfig = $configFactory->create('tag');
     }
 
     #[Route('/api/tag', name: 'app_create_tag', requirements: ['_format' => 'json'], methods: ['POST'])]
@@ -78,18 +57,7 @@ class CreateTagAction extends AbstractEntityController
     {
         $content = $request->toArray();
         $tag = new Tag();
-        $validationErrors = new ConstraintViolationList();
 
-        $this->processFieldsFromConfig($tag, $content, $this->fieldConfig, $validationErrors);
-
-        $errorResponse = $this->processErrors($tag, $validationErrors);
-        if ($errorResponse) {
-            return $errorResponse;
-        }
-
-        $this->manager->persist($tag);
-        $this->manager->flush();
-
-        return $this->createSuccessResponse($tag, 'getTag', Response::HTTP_CREATED);
+        return $this->createEntityData($tag, $content, $this->fieldConfig, 'getTag');
     }
 }

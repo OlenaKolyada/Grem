@@ -2,63 +2,34 @@
 
 namespace App\Controller\News;
 
-use App\Controller\Abstract\AbstractEntityController;
+use App\Controller\Abstract\AbstractCreateEntityAction;
 use App\Entity\News;
-use App\Repository\GameRepository;
-use App\Repository\TagRepository;
-use App\Repository\UserRepository;
+use App\Service\EntityField\Configuration\EntityConfigurationFactoryInterface;
+use App\Service\EntityField\Processor\ErrorProcessor;
+use App\Service\EntityField\Processor\FieldProcessor;
+use App\Service\EntityField\Processor\ResponseProcessor;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\ConstraintViolationList;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
-use App\Service\EntityField\FieldManager;
 use OpenApi\Attributes as OA;
 
-class CreateNewsAction extends AbstractEntityController
+class CreateNewsAction extends AbstractCreateEntityAction
 {
     private array $fieldConfig;
 
     public function __construct(
-        protected SerializerInterface    $serializer,
-        protected EntityManagerInterface $manager,
-        protected FieldManager           $fieldManager,
-        private readonly UserRepository  $userRepository,
-        private readonly TagRepository   $tagRepository,
-        private readonly GameRepository  $gameRepository,
-        protected ValidatorInterface     $validator
+        EntityManagerInterface $manager,
+        FieldProcessor $fieldProcessor,
+        ErrorProcessor $errorProcessor,
+        ResponseProcessor $responseProcessor,
+        EntityConfigurationFactoryInterface $configFactory
     ) {
-        parent::__construct($manager, $serializer, $validator, $fieldManager);
+        parent::__construct($manager, $fieldProcessor, $errorProcessor, $responseProcessor);
 
-        $this->fieldConfig = [
-            'required' => ['title', 'content', 'summary', 'status'],
-            'optional' => ['slug', 'cover'],
-            'relations' => [
-                'author' => [
-                    'type' => 'entity',
-                    'repository' => $this->userRepository,
-                    'numericField' => 'id',
-                    'stringField' => 'title'
-                ],
-                'tag' => [
-                    'type' => 'collection',
-                    'repository' => $this->tagRepository,
-                    'numericField' => 'id',
-                    'stringField' => 'title'
-                ],
-                'game' => [
-                    'type' => 'collection',
-                    'repository' => $this->gameRepository,
-                    'numericField' => 'id',
-                    'stringField' => 'title'
-                ],
-            ]
-        ];
+        $this->fieldConfig = $configFactory->create('news');
     }
 
     #[Route('/api/news', name: 'app_create_news_item', requirements: ['_format' => 'json'], methods: ['POST'])]
@@ -95,18 +66,7 @@ class CreateNewsAction extends AbstractEntityController
 
         $content = $request->toArray();
         $news = new News();
-        $validationErrors = new ConstraintViolationList();
 
-        $this->processFieldsFromConfig($news, $content, $this->fieldConfig, $validationErrors);
-
-        $errorResponse = $this->processErrors($news, $validationErrors);
-        if ($errorResponse) {
-            return $errorResponse;
-        }
-
-        $this->manager->persist($news);
-        $this->manager->flush();
-
-        return $this->createSuccessResponse($news, 'getNews', Response::HTTP_CREATED);
+        return $this->createEntityData($news, $content, $this->fieldConfig, 'getNews');
     }
 }

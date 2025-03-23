@@ -20,6 +20,27 @@ abstract class AbstractEntityController
     ) {
     }
 
+    protected function createEntityData(
+        object $entity,
+        array $content,
+        array $fieldConfig,
+        string $serializationGroup
+    ): JsonResponse {
+        $validationErrors = new ConstraintViolationList();
+
+        $this->processFieldsFromConfig($entity, $content, $fieldConfig, $validationErrors);
+
+        $errorResponse = $this->processErrors($entity, $validationErrors);
+        if ($errorResponse) {
+            return $errorResponse;
+        }
+
+        $this->manager->persist($entity);
+        $this->manager->flush();
+
+        return $this->createSuccessResponse($entity, $serializationGroup, Response::HTTP_CREATED);
+    }
+
     protected function processFieldsFromConfig(
         object $entity,
         array $content,
@@ -62,7 +83,7 @@ abstract class AbstractEntityController
                         $validationErrors,
                         $config['required'] ?? false,
                         null,
-                        $config['clearExisting'] ?? true // Передаем настройку очистки
+                        $config['clearExisting'] ?? true
                     );
                 } elseif ($config['type'] === 'entity') {
                     $this->fieldManager->handleRelationField(

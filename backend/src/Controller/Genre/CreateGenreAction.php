@@ -2,47 +2,34 @@
 
 namespace App\Controller\Genre;
 
-use App\Controller\Abstract\AbstractEntityController;
+use App\Controller\Abstract\AbstractCreateEntityAction;
 use App\Entity\Genre;
-use App\Repository\GameRepository;
-use App\Service\EntityField\FieldManager;
+use App\Service\EntityField\Configuration\EntityConfigurationFactoryInterface;
+use App\Service\EntityField\Processor\ErrorProcessor;
+use App\Service\EntityField\Processor\FieldProcessor;
+use App\Service\EntityField\Processor\ResponseProcessor;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\ConstraintViolationList;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 
-class CreateGenreAction extends AbstractEntityController
+class CreateGenreAction extends AbstractCreateEntityAction
 {
     private array $fieldConfig;
 
     public function __construct(
-        protected EntityManagerInterface $manager,
-        protected SerializerInterface    $serializer,
-        protected FieldManager           $fieldManager,
-        protected ValidatorInterface     $validator,
-        private readonly GameRepository  $gameRepository
+        EntityManagerInterface $manager,
+        FieldProcessor $fieldProcessor,
+        ErrorProcessor $errorProcessor,
+        ResponseProcessor $responseProcessor,
+        EntityConfigurationFactoryInterface $configFactory
     ) {
-        parent::__construct($manager, $serializer, $validator, $fieldManager);
+        parent::__construct($manager, $fieldProcessor, $errorProcessor, $responseProcessor);
 
-        $this->fieldConfig = [
-            'required' => ['title'],
-            'oprional' => ['slug'],
-            'relations' => [
-                'game' => [
-                    'type' => 'collection',
-                    'repository' => $this->gameRepository,
-                    'numericField' => 'id',
-                    'stringField' => 'title'
-                ]
-            ]
-        ];
+        $this->fieldConfig = $configFactory->create('genre');
     }
 
     #[Route('/api/genre', name: 'app_create_genre', requirements: ['_format' => 'json'], methods: ['POST'])]
@@ -68,18 +55,7 @@ class CreateGenreAction extends AbstractEntityController
     {
         $content = $request->toArray();
         $genre = new Genre();
-        $validationErrors = new ConstraintViolationList();
 
-        $this->processFieldsFromConfig($genre, $content, $this->fieldConfig, $validationErrors);
-
-        $errorResponse = $this->processErrors($genre, $validationErrors);
-        if ($errorResponse) {
-            return $errorResponse;
-        }
-
-        $this->manager->persist($genre);
-        $this->manager->flush();
-
-        return $this->createSuccessResponse($genre, 'getGenre', Response::HTTP_CREATED);
+        return $this->createEntityData($genre, $content, $this->fieldConfig, 'getGenre');
     }
 }
