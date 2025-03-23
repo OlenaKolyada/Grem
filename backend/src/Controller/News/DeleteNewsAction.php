@@ -2,9 +2,9 @@
 
 namespace App\Controller\News;
 
+use App\Controller\Abstract\AbstractDeleteEntityAction;
 use App\Entity\News;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -12,12 +12,13 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 
-readonly class DeleteNewsAction
+class DeleteNewsAction extends AbstractDeleteEntityAction
 {
     public function __construct(
-        private EntityManagerInterface $manager,
-        private TagAwareCacheInterface $cache
+        protected readonly EntityManagerInterface $manager,
+        protected readonly TagAwareCacheInterface $cache
     ) {
+        parent::__construct($manager, $cache);
     }
 
     #[Route('/api/news/{id}', name: 'app_delete_news_item', methods: ['DELETE'])]
@@ -30,15 +31,8 @@ readonly class DeleteNewsAction
         required: true, schema: new OA\Schema(type: "integer"))]
     #[OA\Tag(name: "News")]
     #[Security(name: "bearerAuth")]
-    public function __invoke(News $news): JsonResponse
+    public function __invoke(News $news): Response
     {
-        $this->cache->invalidateTags(["newsCache"]);
-        $this->manager->remove($news);
-        $this->manager->flush();
-
-        return new JsonResponse(
-            null,
-            Response::HTTP_NO_CONTENT
-        );
+        return $this->deleteEntity($news, "newsCache");
     }
 }

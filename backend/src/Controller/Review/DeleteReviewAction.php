@@ -2,6 +2,7 @@
 
 namespace App\Controller\Review;
 
+use App\Controller\Abstract\AbstractDeleteEntityAction;
 use App\Entity\Review;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,12 +12,13 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 
-readonly class DeleteReviewAction
+class DeleteReviewAction extends AbstractDeleteEntityAction
 {
     public function __construct(
-        private EntityManagerInterface $manager,
-        private TagAwareCacheInterface $cache
+        protected readonly EntityManagerInterface $manager,
+        protected readonly TagAwareCacheInterface $cache
     ) {
+        parent::__construct($manager, $cache);
     }
 
     #[Route('/api/review/{id}', name: 'app_delete_review_item', methods: ['DELETE'])]
@@ -31,10 +33,6 @@ readonly class DeleteReviewAction
     #[Security(name: "bearerAuth")]
     public function __invoke(Review $review): Response
     {
-        $this->cache->invalidateTags(["reviewCache"]);
-        $this->manager->remove($review);
-        $this->manager->flush();
-
-        return new Response(null, Response::HTTP_NO_CONTENT);
+        return $this->deleteEntity($review, "reviewCache");
     }
 }

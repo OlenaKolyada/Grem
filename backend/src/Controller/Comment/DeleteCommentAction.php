@@ -2,9 +2,9 @@
 
 namespace App\Controller\Comment;
 
+use App\Controller\Abstract\AbstractDeleteEntityAction;
 use App\Entity\Comment;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -12,12 +12,13 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 
-readonly class DeleteCommentAction
+class DeleteCommentAction extends AbstractDeleteEntityAction
 {
     public function __construct(
-        private EntityManagerInterface $manager,
-        private TagAwareCacheInterface $cache
+        protected readonly EntityManagerInterface $manager,
+        protected readonly TagAwareCacheInterface $cache
     ) {
+        parent::__construct($manager, $cache);
     }
 
     #[Route('/api/comment/{id}', name: 'app_delete_comment_item', methods: ['DELETE'])]
@@ -32,10 +33,6 @@ readonly class DeleteCommentAction
     #[Security(name: "bearerAuth")]
     public function __invoke(Comment $comment): Response
     {
-        $this->cache->invalidateTags(["commentCache"]);
-        $this->manager->remove($comment);
-        $this->manager->flush();
-
-        return new Response(null, Response::HTTP_NO_CONTENT);
+        return $this->deleteEntity($comment, "commentCache");
     }
 }

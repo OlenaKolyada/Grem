@@ -2,6 +2,7 @@
 
 namespace App\Controller\Game;
 
+use App\Controller\Abstract\AbstractDeleteEntityAction;
 use App\Entity\Game;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,12 +12,13 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 
-readonly class DeleteGameAction
+class DeleteGameAction extends AbstractDeleteEntityAction
 {
     public function __construct(
-        private EntityManagerInterface $manager,
-        private TagAwareCacheInterface $cache
+        protected readonly EntityManagerInterface $manager,
+        protected readonly TagAwareCacheInterface $cache
     ) {
+        parent::__construct($manager, $cache);
     }
 
     #[Route('/api/game/{id}', name: 'app_delete_game_item', methods: ['DELETE'])]
@@ -31,10 +33,6 @@ readonly class DeleteGameAction
     #[Security(name: "bearerAuth")]
     public function __invoke(Game $game): Response
     {
-        $this->cache->invalidateTags(["gameCache"]);
-        $this->manager->remove($game);
-        $this->manager->flush();
-
-        return new Response(null, Response::HTTP_NO_CONTENT);
+        return $this->deleteEntity($game, "gameCache");
     }
 }

@@ -2,9 +2,9 @@
 
 namespace App\Controller\Tag;
 
+use App\Controller\Abstract\AbstractDeleteEntityAction;
 use App\Entity\Tag;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -12,12 +12,13 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 
-readonly class DeleteTagAction
+class DeleteTagAction extends AbstractDeleteEntityAction
 {
     public function __construct(
-        private EntityManagerInterface $manager,
-        private TagAwareCacheInterface $cache
+        protected readonly EntityManagerInterface $manager,
+        protected readonly TagAwareCacheInterface $cache
     ) {
+        parent::__construct($manager, $cache);
     }
     #[Route('/api/tag/{id}', name: 'app_delete_tag', methods: ['DELETE'])]
     #[IsGranted('ROLE_ADMIN', message: 'You do not have sufficient permissions')]
@@ -29,15 +30,8 @@ readonly class DeleteTagAction
         required: true, schema: new OA\Schema(type: "integer"))]
     #[OA\Tag(name: "Tag")]
     #[Security(name: "bearerAuth")]
-    public function __invoke(Tag $tag): JsonResponse
+    public function __invoke(Tag $tag): Response
     {
-        $this->cache->invalidateTags(["tagCache"]);
-        $this->manager->remove($tag);
-        $this->manager->flush();
-
-        return new JsonResponse(
-            null,
-            Response::HTTP_NO_CONTENT
-        );
+        return $this->deleteEntity($tag, "tagCache");
     }
 }

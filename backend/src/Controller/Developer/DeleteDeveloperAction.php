@@ -2,6 +2,7 @@
 
 namespace App\Controller\Developer;
 
+use App\Controller\Abstract\AbstractDeleteEntityAction;
 use App\Entity\Developer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,12 +12,13 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 
-readonly class DeleteDeveloperAction
+class DeleteDeveloperAction extends AbstractDeleteEntityAction
 {
     public function __construct(
-        private EntityManagerInterface $manager,
-        private TagAwareCacheInterface $cache
+        protected readonly EntityManagerInterface $manager,
+        protected readonly TagAwareCacheInterface $cache
     ) {
+        parent::__construct($manager, $cache);
     }
 
     #[Route('/api/developer/{id}', name: 'app_delete_developer', methods: ['DELETE'])]
@@ -31,10 +33,6 @@ readonly class DeleteDeveloperAction
     #[Security(name: "bearerAuth")]
     public function __invoke(Developer $developer): Response
     {
-        $this->cache->invalidateTags(["developerCache"]);
-        $this->manager->remove($developer);
-        $this->manager->flush();
-
-        return new Response(null, Response::HTTP_NO_CONTENT);
+        return $this->deleteEntity($developer, "developerCache");
     }
 }

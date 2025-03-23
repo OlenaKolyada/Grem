@@ -2,6 +2,7 @@
 
 namespace App\Controller\Genre;
 
+use App\Controller\Abstract\AbstractDeleteEntityAction;
 use App\Entity\Genre;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,12 +12,13 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 
-readonly class DeleteGenreAction
+class DeleteGenreAction extends AbstractDeleteEntityAction
 {
     public function __construct(
-        private EntityManagerInterface $manager,
-        private TagAwareCacheInterface $cache
+        protected readonly EntityManagerInterface $manager,
+        protected readonly TagAwareCacheInterface $cache
     ) {
+        parent::__construct($manager, $cache);
     }
     #[Route('/api/genre/{id}', name: 'app_delete_genre', methods: ['DELETE'])]
     #[IsGranted('ROLE_ADMIN', message: 'You do not have sufficient permissions')]
@@ -30,10 +32,6 @@ readonly class DeleteGenreAction
     #[Security(name: "bearerAuth")]
     public function __invoke(Genre $genre): Response
     {
-        $this->cache->invalidateTags(["genreCache"]);
-        $this->manager->remove($genre);
-        $this->manager->flush();
-
-        return new Response(null, Response::HTTP_NO_CONTENT);
+        return $this->deleteEntity($genre, "genreCache");
     }
 }

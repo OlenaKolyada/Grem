@@ -2,6 +2,7 @@
 
 namespace App\Controller\User;
 
+use App\Controller\Abstract\AbstractDeleteEntityAction;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,12 +12,13 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 
-readonly class DeleteUserAction
+class DeleteUserAction extends AbstractDeleteEntityAction
 {
     public function __construct(
-        private EntityManagerInterface $manager,
-        private TagAwareCacheInterface $cache
+        protected readonly EntityManagerInterface $manager,
+        protected readonly TagAwareCacheInterface $cache
     ) {
+        parent::__construct($manager, $cache);
     }
     #[Route('/api/user/{id}', name: 'app_delete_user', methods: ['DELETE'])]
     #[IsGranted('ROLE_ADMIN', message: 'You do not have sufficient permissions')]
@@ -30,10 +32,6 @@ readonly class DeleteUserAction
     #[Security(name: "bearerAuth")]
     public function __invoke(User $user): Response
     {
-        $this->cache->invalidateTags(["userCache"]);
-        $this->manager->remove($user);
-        $this->manager->flush();
-
-        return new Response(null, Response::HTTP_NO_CONTENT);
+        return $this->deleteEntity($user, "userCache");
     }
 }
