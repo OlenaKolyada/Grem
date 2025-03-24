@@ -45,6 +45,8 @@ security:
         - { path: ^/api/platform$, roles: PUBLIC_ACCESS }
         - { path: ^/api/doc, roles: PUBLIC_ACCESS }
         - { path: ^/api/.+/resolve/.+$, roles: PUBLIC_ACCESS }
+        - { path: ^/api/news/resolve/, roles: PUBLIC_ACCESS }
+        - { path: ^/api/news/[ ^/ ]+$, roles: PUBLIC_ACCESS }
 
         # Защита пользовательских данных
         - { path: ^/api/user/\d+$, roles: IS_AUTHENTICATED_FULLY }

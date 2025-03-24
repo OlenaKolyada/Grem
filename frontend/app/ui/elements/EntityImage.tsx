@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { API_URL } from "@/app/lib/config/constants";
+import { API_URL } from "@/app/lib/config/config";
 
 interface EntityImageProps {
     id: number | undefined;

@@ -10,7 +10,7 @@ export async function generateMetadata(props: {
     params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
     const { slug } = await props.params;
-    const entity = await fetchEntityBySlug("game", slug);
+    const entity = await fetchEntityBySlug<Entity>("game", slug);
 
     if (!entity) {
         return { title: "Not Found" };
@@ -18,7 +18,7 @@ export async function generateMetadata(props: {
 
     return generateItemMetadata({
         categoryName: "game",
-        itemTitle: entity.title,
+        itemTitle: entity.title || "",
     });
 }
 
@@ -27,8 +27,7 @@ export default async function Page(props: {
 }) {
     const { slug } = await props.params;
 
-    // Проверяем существование сущности на серверной стороне
-    const entity = await fetchEntityBySlug("game", slug);
+    const entity = await fetchEntityBySlug<Entity>("game", slug);
 
     if (!entity) {
         notFound();
@@ -42,7 +41,6 @@ export default async function Page(props: {
         { label: "Platform Requirements Level", value: "platformRequirementsLevel" },
         { label: "Languages", value: "language" },
     ];
-
 
     return (
         <CoreEntityContainer

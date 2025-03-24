@@ -7,11 +7,8 @@ services:
     volumes:
       - db-data:/var/lib/mysql
     environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: grem
-      MYSQL_USER: grem
-      MYSQL_PASSWORD: grem
-      MYSQL_ROOT_PASSWORD: grem
-
     networks:
       - grem
 
@@ -32,12 +29,14 @@ services:
   # Symfony apache project container
   backend:
     build:
-      context: ./backend
-      dockerfile: ../docker/backend/Dockerfile
+      context: .
+      dockerfile: docker/backend/Dockerfile
     container_name: backend
     environment:
-      APP_ENV: prod
-      DATAAPI_URL: "mysql://grem:grem@db:3306/grem?charset=utf8mb4"
+      APP_ENV: docker
+      APP_DEBUG: 1
+      DATABASE_URL: "mysql://root@db:3306/grem?serverVersion=8.0"
+      DATAAPI_URL: "mysql://root@db:3306/grem?serverVersion=8.0"
     depends_on:
       - db
     ports:
@@ -55,16 +54,16 @@ services:
   # React / Next.js frontend container
   frontend:
     build:
-      context: ./frontend
-      dockerfile: ../docker/frontend/Dockerfile
+      context: .
+      dockerfile: docker/frontend/Dockerfile
     container_name: frontend
     environment:
-      NEXT_PUBLIC_API_URL: "http://backend:80"
+      NEXT_PUBLIC_API_URL: "http://localhost:8001"
       NEXT_PUBLIC_ENVIRONMENT: "docker"
     ports:
       - "80:3001"
-#    volumes:
-#      - ./frontend:/app
+    #    volumes:
+    #      - ./frontend:/app
     networks:
       - grem
     depends_on:

@@ -1,6 +1,6 @@
 // app/components/menu/menu-links.ts
 
-import { API_URL } from "@/app/lib/config/constants";
+import { API_URL } from "@/app/lib/config/config";
 
 type Link = {
     name: string;

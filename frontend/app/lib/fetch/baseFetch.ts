@@ -1,8 +1,10 @@
 // app/lib/fetch/baseFetch.ts
-
 import { API_URL, API_CONFIG } from "@/app/lib/config";
 
-export async function baseFetch<T>(endpoint: string, queryParams?: Record<string, string>): Promise<T> {
+export async function baseFetch<T>(
+    endpoint: string,
+    queryParams?: Record<string, string>
+): Promise<T> {
     if (!API_URL) {
         throw new Error("API_URL is not defined");
     }

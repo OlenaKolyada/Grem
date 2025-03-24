@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Statistics</title>
+    <style>
+        body { font-family: sans-serif; margin: 2em; }
+        header img { height: 50px; }
+        .stats { margin-top: 2em; }
+        table { border-collapse: collapse; width: 300px; }
+        td { padding: 8px; border: 1px solid #ccc; }
+        footer { margin-top: 2em; }
+    </style>
+</head>
+<body>
+<header>
+    <img src="/uploads/images/assets/logo.png" alt="Logo">
+</header>
+
+<section class="stats">
+    <h1>User Statistics</h1>
+    <table>
+        <tr>
+            <td>Visitors</td>
+            <td>{{ stats.visitors }}</td>
+        </tr>
+        <tr>
+            <td>Date</td>
+            <td>{{ stats.date }}</td>
+        </tr>
+        <tr>
+            <td>Counter</td>
+            <td>{{ stats.counter }}</td>
+        </tr>
+    </table>
+</section>
+
+<footer>
+    <a href="{{ frontend_url }}/">Home</a> |
+    <a href="{{ backend_url }}/admin">Admin Panel</a>
+</footer>
+</body>
+</html>

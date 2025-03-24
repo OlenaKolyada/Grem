@@ -4,6 +4,8 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    app.local_backend_url: 'http://localhost:8000'
+    app.local_frontend_url: 'http://localhost:3000'
 
 services:
     # default configuration for services in *this* file
@@ -28,3 +30,8 @@ services:
 
     App\Validator\UniqueEmailValidator:
         tags: ['validator.constraint_validator']
+
+    App\Controller\Admin\DashboardController:
+        arguments:
+            $backendUrl: '%app.local_backend_url%'
+            $frontendUrl: '%app.local_frontend_url%'

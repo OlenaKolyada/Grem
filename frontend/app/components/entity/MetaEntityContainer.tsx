@@ -28,7 +28,7 @@ export function MetaEntityContainer({
     useEffect(() => {
         if (!slug) return;
 
-        fetchEntityBySlug(categoryName, slug)
+        fetchEntityBySlug<Entity>(categoryName, slug)
             .then(data => setEntityItem(data))
             .catch(err => {
                 setError(err);
