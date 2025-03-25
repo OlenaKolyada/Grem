@@ -10,7 +10,11 @@ trait AutoSlugTrait
     #[ORM\PreUpdate]
     public function generateSlugFromTitle(): void
     {
-        if (!method_exists($this, 'getTitle') || !method_exists($this, 'getSlug') || !method_exists($this, 'setSlug')) {
+        if (
+            !method_exists($this, 'getTitle') ||
+            !method_exists($this, 'getSlug') ||
+            !method_exists($this, 'setSlug')
+        ) {
             return;
         }
 

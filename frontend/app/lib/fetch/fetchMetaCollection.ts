@@ -1,5 +1,4 @@
 // app/lib/fetch/fetchMetaCollection.ts
-
 import { baseFetch } from "./baseFetch";
 
 export async function fetchMetaCollection<T>(

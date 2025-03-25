@@ -12,9 +12,8 @@ export async function generateMetadata(props: {
   const { slug } = await props.params;
 
   const entity = await fetchEntityBySlug<Entity>("news", slug);
-
   if (!entity) {
-    return { title: "First Fuck Next.js" };
+    return { title: "First Fuck Next1.js" };
   }
 
   console.log("METADATA GENERATION - Entity found, returning metadata with title:", entity.title);
@@ -34,7 +33,8 @@ export default async function Page(props: {
     slug: slug,
     encodedSlug: encodeURIComponent(slug),
     apiUrl: API_URL,
-    fullApiPath: `${API_URL}/api/news/resolve/${slug}`
+    fullApiPath: `${API_URL}/api/news/resolve/${slug}`,
+
   };
 
   // Пробуем получить данные напрямую

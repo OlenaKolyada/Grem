@@ -25,33 +25,18 @@ class News
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::INTEGER)]
-    #[Groups([
-        self::GROUP_GET_NEWS,
-        self::GROUP_GET_NEWS_COLLECTION,
-        Game::GROUP_GET_GAME,
-        Tag::GROUP_GET_TAG
-    ])]
+    #[Groups([self::GROUP_GET_NEWS, self::GROUP_GET_NEWS_COLLECTION, Game::GROUP_GET_GAME, Tag::GROUP_GET_TAG])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::STRING, length: 255)]
-    #[Groups([
-        self::GROUP_GET_NEWS,
-        self::GROUP_GET_NEWS_COLLECTION,
-        Game::GROUP_GET_GAME,
-        Tag::GROUP_GET_TAG
-    ])]
+    #[Groups([self::GROUP_GET_NEWS, self::GROUP_GET_NEWS_COLLECTION, Game::GROUP_GET_GAME, Tag::GROUP_GET_TAG])]
     #[Assert\NotBlank(message: 'Title cannot be empty')]
     #[Assert\Length(min: 3, max: 255,
         minMessage: 'Title must be at least {{ limit }} characters long',
         maxMessage: 'Title must not exceed {{ limit }} characters')]
     private ?string $title = null;
 
-    #[Groups([
-        self::GROUP_GET_NEWS,
-        self::GROUP_GET_NEWS_COLLECTION,
-        Game::GROUP_GET_GAME,
-        Tag::GROUP_GET_TAG
-    ])]
+    #[Groups([self::GROUP_GET_NEWS, self::GROUP_GET_NEWS_COLLECTION, Game::GROUP_GET_GAME, Tag::GROUP_GET_TAG])]
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     #[Assert\Length(max: 255, maxMessage: 'Slug cannot be longer than {{ limit }} characters.')]
     private ?string $slug = null;
@@ -65,12 +50,7 @@ class News
     private ?string $content = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups([
-        self::GROUP_GET_NEWS,
-        self::GROUP_GET_NEWS_COLLECTION,
-        Game::GROUP_GET_GAME,
-        Tag::GROUP_GET_TAG
-    ])]
+    #[Groups([self::GROUP_GET_NEWS, self::GROUP_GET_NEWS_COLLECTION, Game::GROUP_GET_GAME, Tag::GROUP_GET_TAG])]
     #[Assert\NotBlank(message: 'Summary cannot be empty')]
     #[Assert\Length(min: 10,max: 255,
         minMessage: 'Summary must be at least {{ limit }} characters long.',
@@ -82,31 +62,16 @@ class News
     private ?string $cover = null;
 
     #[ORM\Column(type: Types::STRING, enumType: StatusEnum::class)]
-    #[Groups([
-        self::GROUP_GET_NEWS,
-        self::GROUP_GET_NEWS_COLLECTION,
-        Game::GROUP_GET_GAME,
-        Tag::GROUP_GET_TAG
-    ])]
+    #[Groups([self::GROUP_GET_NEWS, self::GROUP_GET_NEWS_COLLECTION, Game::GROUP_GET_GAME, Tag::GROUP_GET_TAG])]
     #[Assert\NotBlank(message: 'Status cannot be empty.')]
     private ?StatusEnum $status = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups([
-        self::GROUP_GET_NEWS,
-        self::GROUP_GET_NEWS_COLLECTION,
-        Game::GROUP_GET_GAME,
-        Tag::GROUP_GET_TAG
-    ])]
+    #[Groups([self::GROUP_GET_NEWS, self::GROUP_GET_NEWS_COLLECTION, Game::GROUP_GET_GAME, Tag::GROUP_GET_TAG])]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups([
-        self::GROUP_GET_NEWS,
-        self::GROUP_GET_NEWS_COLLECTION,
-        Game::GROUP_GET_GAME,
-        Tag::GROUP_GET_TAG
-    ])]
+    #[Groups([self::GROUP_GET_NEWS, self::GROUP_GET_NEWS_COLLECTION, Game::GROUP_GET_GAME, Tag::GROUP_GET_TAG])]
     private ?\DateTimeInterface $updatedAt = null;
 
     /**
@@ -125,12 +90,7 @@ class News
 
     #[ORM\ManyToOne(inversedBy: 'news')]
     #[ORM\JoinColumn(nullable: true, onDelete: "SET NULL")]
-    #[Groups([
-        self::GROUP_GET_NEWS,
-        self::GROUP_GET_NEWS_COLLECTION,
-        Game::GROUP_GET_GAME,
-        Tag::GROUP_GET_TAG
-    ])]
+    #[Groups([self::GROUP_GET_NEWS, self::GROUP_GET_NEWS_COLLECTION, Game::GROUP_GET_GAME, Tag::GROUP_GET_TAG])]
     private ?User $author = null;
 
     public function __construct()
@@ -205,12 +165,7 @@ class News
         return $this;
     }
 
-    #[Groups([
-        self::GROUP_GET_NEWS,
-        self::GROUP_GET_NEWS_COLLECTION,
-        Game::GROUP_GET_GAME,
-        Tag::GROUP_GET_TAG
-    ])]
+    #[Groups([self::GROUP_GET_NEWS, self::GROUP_GET_NEWS_COLLECTION, Game::GROUP_GET_GAME, Tag::GROUP_GET_TAG])]
     public function getCoverUrl(): ?string
     {
         return $this->cover ? '/uploads/images/news/' . $this->getId() . '/' . $this->cover : null;

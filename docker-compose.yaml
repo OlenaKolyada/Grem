@@ -58,12 +58,12 @@ services:
       dockerfile: docker/frontend/Dockerfile
     container_name: frontend
     environment:
-      NEXT_PUBLIC_API_URL: "http://localhost:8001"
       NEXT_PUBLIC_ENVIRONMENT: "docker"
+#      NODE_ENV: docker
     ports:
       - "80:3001"
-    #    volumes:
-    #      - ./frontend:/app
+#    volumes:
+#      - ./frontend:/app
     networks:
       - grem
     depends_on:

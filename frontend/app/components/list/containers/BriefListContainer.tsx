@@ -15,18 +15,14 @@ export function BriefListContainer({
                                        filterStatus = true
                                    }: BriefListProps) {
 
-    // Применяем фильтрацию по статусу
-    const filteredItems = applyStatusFilter(entityItems, filterStatus);
 
-    // Сортируем элементы по заголовку
+    const filteredItems = applyStatusFilter(entityItems, filterStatus);
     const sortedList = sortListByTitle(filteredItems);
 
-    // Если список пуст, не рендерим компонент
     if (sortedList.length === 0) {
         return null;
     }
 
-    // Рендерим UI-компонент с подготовленными данными
     return (
         <BriefListUi
             sortedList={sortedList}

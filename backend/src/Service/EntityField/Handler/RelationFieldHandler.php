@@ -53,6 +53,7 @@ class RelationFieldHandler extends AbstractFieldHandler
         } elseif ($stringField) {
             $relatedEntity = $repository->findOneBy([$stringField => $data[$fieldName]]);
         }
+
         if ($relatedEntity === null && $isRequired) {
             $this->errorHandler->addError(
                 $entity,
@@ -63,6 +64,7 @@ class RelationFieldHandler extends AbstractFieldHandler
             );
             return false;
         }
+
         if ($relatedEntity !== null) {
             $setter = 'set' . ucfirst($fieldName);
             $entity->$setter($relatedEntity);

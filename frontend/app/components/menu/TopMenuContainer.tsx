@@ -8,7 +8,6 @@ export function TopMenuContainer() {
     const { user, isAuthenticated, loading } = useAuth();
     const isAdmin = isAuthenticated && user?.roles && user.roles.includes('ROLE_ADMIN');
 
-    // Если идет загрузка, показываем скелетоны для меню и кнопки
     if (loading) {
         return (
             <div className="flex h-full flex-row px-3 py-4 md:px-2 justify-between">

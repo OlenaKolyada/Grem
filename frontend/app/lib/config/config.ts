@@ -18,12 +18,19 @@ export const API_URL = isServer && !isDevEnvironment
     ? SERVER_API_URL
     : CLIENT_API_URL;
 
-// Для отладки
-if (isDevEnvironment) {
-    console.log('Dev environment detected');
-    console.log('API URL:', API_URL);
-    console.log('Is server:', isServer);
-}
+console.log('NODE_ENV', process.env.NODE_ENV);
+console.log('NEXT_PUBLIC_ENVIRONMENT', process.env.NEXT_PUBLIC_ENVIRONMENT);
+
+// console.log('Dev environment detected');
+console.log('API URL:', API_URL);
+console.log('Is server:', isServer);
+
+// // Для отладки
+// if (isDevEnvironment) {
+//     console.log('Dev environment detected');
+//     console.log('API URL:', API_URL);
+//     console.log('Is server:', isServer);
+// }
 
 export const API_CONFIG = {
     timeout: 10000,
