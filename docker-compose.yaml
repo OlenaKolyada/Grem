@@ -35,8 +35,7 @@ services:
       dockerfile: docker/backend/Dockerfile
     container_name: backend
     environment:
-      APP_ENV: docker
-      APP_DEBUG: 1
+      APP_ENV: prod
       DATABASE_URL: "mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@db:3306/grem?serverVersion=8.0"
       # DATAAPI_URL: "mysql://root@db:3306/grem?serverVersion=8.0"
     depends_on:
