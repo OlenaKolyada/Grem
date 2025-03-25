@@ -58,8 +58,6 @@ services:
       context: .
       dockerfile: docker/frontend/Dockerfile
     container_name: frontend
-    environment:
-      NEXT_PUBLIC_API_URL: "http://ec2-15-236-109-182.eu-west-3.compute.amazonaws.com:8001"
     ports:
       - "80:3001"
 #    volumes:
