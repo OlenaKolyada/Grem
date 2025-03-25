@@ -37,7 +37,6 @@ services:
     environment:
       APP_ENV: prod
       DATABASE_URL: "mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@db:3306/grem?serverVersion=8.0"
-      # DATAAPI_URL: "mysql://root@db:3306/grem?serverVersion=8.0"
     depends_on:
       - db
     ports:
