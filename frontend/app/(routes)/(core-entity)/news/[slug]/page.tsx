@@ -1,4 +1,4 @@
-// import { notFound } from "next/navigation";
+import { notFound } from "next/navigation";
 import { CoreEntityContainer } from "@/app/components/entity";
 import type { Metadata } from 'next';
 import { generateItemMetadata } from '@/app/lib/utils';
@@ -37,22 +37,25 @@ export default async function Page(props: {
   // };
 
   // Пробуем получить данные напрямую
-  let entityResult = null;
-  let fetchError = null;
+  // let entityResult = null;
+  // let fetchError = null;
 
   try {
-    const response = await fetch(`${API_URL}/api/news/resolve/${slug}`, {
-      cache: 'no-store' // Отключаем кэш для проверки
-    });
+    const response = await fetch(`${API_URL}/api/news/resolve/${slug}`);
 
-    if (response.ok) {
-      entityResult = await response.json();
-    } else {
-      fetchError = `Status: ${response.status}, StatusText: ${response.statusText}`;
+    if (!response) {
+      notFound();
+      return null;
     }
-  } catch (error) {
-    fetchError = String(error);
-  }
+  
+    //   if (response.ok) {
+  //     entityResult = await response.json();
+  //   } else {
+  //     fetchError = `Status: ${response.status}, StatusText: ${response.statusText}`;
+  //   }
+  // } catch (error) {
+  //   fetchError = String(error);
+  // }
 
   return (
       // <div style={{ padding: '20px', fontFamily: 'monospace' }}>
