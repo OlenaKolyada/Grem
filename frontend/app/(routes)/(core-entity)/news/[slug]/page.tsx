@@ -40,13 +40,13 @@ export default async function Page(props: {
   // let entityResult = null;
   // let fetchError = null;
 
-  try {
-    const response = await fetch(`${API_URL}/api/news/resolve/${slug}`);
+  // try {
+  const response = await fetch(`${API_URL}/api/news/resolve/${slug}`);
 
-    if (!response) {
-      notFound();
-      return null;
-    }
+  if (!response) {
+    notFound();
+    return null;
+  }
   
     //   if (response.ok) {
   //     entityResult = await response.json();
