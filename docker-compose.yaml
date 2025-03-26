@@ -59,8 +59,6 @@ services:
     container_name: frontend
     ports:
       - "80:3001"
-#    volumes:
-#      - ./frontend:/app
     networks:
       - grem
     depends_on:
