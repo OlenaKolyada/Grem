@@ -7,8 +7,10 @@ services:
     volumes:
       - db-data:/var/lib/mysql
     environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: grem
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     networks:
       - grem
 
@@ -33,10 +35,8 @@ services:
       dockerfile: docker/backend/Dockerfile
     container_name: backend
     environment:
-      APP_ENV: docker
-      APP_DEBUG: 1
-      DATABASE_URL: "mysql://root@db:3306/grem?serverVersion=8.0"
-      DATAAPI_URL: "mysql://root@db:3306/grem?serverVersion=8.0"
+      APP_ENV: prod
+      DATABASE_URL: "mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@db:3306/grem?serverVersion=8.0"
     depends_on:
       - db
     ports:
@@ -57,9 +57,6 @@ services:
       context: .
       dockerfile: docker/frontend/Dockerfile
     container_name: frontend
-    environment:
-      NEXT_PUBLIC_ENVIRONMENT: "docker"
-#      NODE_ENV: docker
     ports:
       - "80:3001"
 #    volumes:

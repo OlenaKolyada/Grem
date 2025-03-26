@@ -9,7 +9,6 @@ nelmio_cors:
         allow_credentials: true
     paths:
         '^/api/':
-            allow_origin: ['http://localhost:3000', 'http://localhost', 'http://localhost:80', 'http://127.0.0.1', 'http://127.0.0.1:8001']
             allow_headers: ['*']
             allow_methods: ['GET', 'OPTIONS', 'POST', 'PUT', 'PATCH', 'DELETE']
             allow_credentials: true
