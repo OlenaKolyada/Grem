@@ -2,8 +2,6 @@
 
 FROM php:8.3-apache
 
-USER www-data
-
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 RUN apt-get update \
