@@ -17,7 +17,7 @@ export function EntityImage({
                                 categoryName,
                                 title,
                                 coverUrl,
-                                width = "w-full sm:w-2/5 md:w-[300px] lg:w-[250px]",
+                                width = "w-full",
                                 height = "h-[250px]",
                                 className = "",
                                 imageType = 'cover'
