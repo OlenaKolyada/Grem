@@ -54,7 +54,7 @@ export function CoreEntityUi({
                     </div>
 
                     <div className="flex flex-col md:flex-row my-9">
-                        <div className="w-[40%] mr-6">
+                        <div className="w-2/5 mr-6 overflow-hidden">
                             <EntityImage
                                 id={entityItem.id}
                                 categoryName={categoryName}
