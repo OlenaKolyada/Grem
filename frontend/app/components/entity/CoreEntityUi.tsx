@@ -60,7 +60,7 @@ export function CoreEntityUi({
                                 categoryName={categoryName}
                                 title={entityItem.title}
                                 coverUrl={entityItem?.coverUrl}
-                                width="w-full md:w-[400px] lg:w-[500px]"
+                                width="w-full md:w-[400px] 2xl:w-[500px]"
                                 height="h-[350px]"
                             />
                         </div>
