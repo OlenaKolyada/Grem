@@ -17,7 +17,7 @@ export function EntityImage({
                                 categoryName,
                                 title,
                                 coverUrl,
-                                width = "w-full md:w-[350px]",
+                                width = "w-full sm:w-2/5 md:w-[300px] lg:w-[250px]",
                                 height = "h-[250px]",
                                 className = "",
                                 imageType = 'cover'
@@ -27,7 +27,7 @@ export function EntityImage({
         : `${API_URL}//uploads/images/${categoryName}/${id}/${imageType}.jpg`;
 
     return (
-        <div className={`relative ${width} ${height} shrink-0 ${className}`}>
+        <div className={`relative ${width} ${height} shrink-0 overflow-hidden ${className}`}>
             <Image
                 src={imageUrl}
                 alt={title ?? ''}

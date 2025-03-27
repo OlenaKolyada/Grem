@@ -21,7 +21,7 @@ export function ProfileUi({ user }: ProfileProps) {
     ];
 
     return (
-        <main className="p-9 w-2/4">
+        <main className="p-9 w-3/4">
             <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
                 <div className="mx-9 flex flex-col md:flex-1">
 
