@@ -54,13 +54,13 @@ export function CoreEntityUi({
                     </div>
 
                     <div className="flex flex-col md:flex-row my-9">
-                        <div className="w-2/4 mr-6">
+                        <div className="w-2/5 mr-6">
                             <EntityImage
                                 id={entityItem.id}
                                 categoryName={categoryName}
                                 title={entityItem.title}
                                 coverUrl={entityItem?.coverUrl}
-                                width="w-full md:w-[500px]"
+                                width="w-full md:w-[400px] lg:w-[500px]"
                                 height="h-[350px]"
                             />
                         </div>
