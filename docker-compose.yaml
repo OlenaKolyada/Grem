@@ -36,7 +36,8 @@ services:
     container_name: backend
     environment:
       APP_ENV: prod
-      FRONTEND_URL: http://ec2-15-236-109-182.eu-west-3.compute.amazonaws.com/
+      FRONTEND_URL: http://grem.funkycorgi.com
+      BACKEND_URL: http://15.236.109.182:8001
       DATABASE_URL: "mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@db:3306/grem?serverVersion=8.0"
     depends_on:
       - db
