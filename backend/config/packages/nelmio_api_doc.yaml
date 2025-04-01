@@ -17,3 +17,4 @@ nelmio_api_doc:
     areas:
         path_patterns:
             - ^/api(?!/doc$)
+    enable_swagger_ui: true
