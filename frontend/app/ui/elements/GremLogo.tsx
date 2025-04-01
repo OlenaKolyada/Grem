@@ -1,12 +1,12 @@
 // app/ui/elements/GremLogo.tsx
-
 import Image from 'next/image';
 import Link from 'next/link';
 import { API_URL } from "@/app/lib/config";
 
 export function GremLogo() {
     return (
-        <div className={`flex flex-row items-center leading-none text-white`}>
+        <div className={`flex flex-row items-center 
+        leading-none text-white`}>
             <Link href='/'>
                 <Image
                     src={`${API_URL}/uploads/images/assets/logo.png`}
@@ -18,3 +18,4 @@ export function GremLogo() {
         </div>
     );
 }
+

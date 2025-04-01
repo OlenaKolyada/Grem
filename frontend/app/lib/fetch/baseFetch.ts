@@ -11,7 +11,9 @@ export async function baseFetch<T>(
 
     let url = `${API_URL}/api/${endpoint}`;
     if (queryParams && Object.keys(queryParams).length > 0) {
-        const searchParams = new URLSearchParams(queryParams);
+        const searchParams = new URLSearchParams(
+            queryParams
+        );
         url += `?${searchParams.toString()}`;
     }
 

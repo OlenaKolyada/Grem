@@ -11,7 +11,8 @@ export function BriefListItemUi({
     return (
         <Link
             href={`/${categoryName}/${entityItem.slug || entityItem.id}`}
-            className="bg-gray-200 text-gray-800 px-3 py-1 rounded-full hover:opacity-80"
+            className="bg-gray-200 text-gray-800 px-3
+            py-1 rounded-full hover:opacity-80"
         >
             {entityItem.title}
         </Link>

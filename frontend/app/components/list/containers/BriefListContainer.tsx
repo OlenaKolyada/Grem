@@ -8,16 +8,23 @@ import {
     applyStatusFilter
 } from '@/app/components/list';
 
+// app/components/list/containers/BriefListContainer.tsx
 export function BriefListContainer({
                                        entityItems = [],
                                        categoryNames = [],
                                        label = '',
                                        filterStatus = true
-                                   }: BriefListProps) {
+                                   }: BriefListProps
+) {
 
 
-    const filteredItems = applyStatusFilter(entityItems, filterStatus);
-    const sortedList = sortListByTitle(filteredItems);
+    const filteredItems = applyStatusFilter(
+        entityItems,
+        filterStatus
+    );
+    const sortedList = sortListByTitle(
+        filteredItems
+    );
 
     if (sortedList.length === 0) {
         return null;

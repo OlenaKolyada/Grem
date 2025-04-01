@@ -9,9 +9,15 @@ interface MetaCollectionPageProps {
     categoryName: string;
 }
 
-export function MetaCollectionContainer({ categoryName }: MetaCollectionPageProps) {
+export function MetaCollectionContainer({
+                                            categoryName
+}: MetaCollectionPageProps) {
 
-    const { data, loading, error } = useMetaCollection<Entity>(categoryName);
+    const {
+        data,
+        loading,
+        error
+    } = useMetaCollection<Entity>(categoryName);
 
     if (loading) return <main className="p-9 w-4/5"></main>;
     if (error) return <p>Error: {error}</p>;

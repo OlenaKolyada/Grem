@@ -25,11 +25,17 @@ class News
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::INTEGER)]
-    #[Groups([self::GROUP_GET_NEWS, self::GROUP_GET_NEWS_COLLECTION, Game::GROUP_GET_GAME, Tag::GROUP_GET_TAG])]
+    #[Groups([self::GROUP_GET_NEWS,
+    self::GROUP_GET_NEWS_COLLECTION,
+    Game::GROUP_GET_GAME,
+    Tag::GROUP_GET_TAG])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::STRING, length: 255)]
-    #[Groups([self::GROUP_GET_NEWS, self::GROUP_GET_NEWS_COLLECTION, Game::GROUP_GET_GAME, Tag::GROUP_GET_TAG])]
+    #[Groups([self::GROUP_GET_NEWS,
+    self::GROUP_GET_NEWS_COLLECTION,
+    Game::GROUP_GET_GAME,
+    Tag::GROUP_GET_TAG])]
     #[Assert\NotBlank(message: 'Title cannot be empty')]
     #[Assert\Length(min: 3, max: 255,
         minMessage: 'Title must be at least {{ limit }} characters long',
@@ -67,31 +73,37 @@ class News
     private ?StatusEnum $status = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups([self::GROUP_GET_NEWS, self::GROUP_GET_NEWS_COLLECTION, Game::GROUP_GET_GAME, Tag::GROUP_GET_TAG])]
+    #[Groups([self::GROUP_GET_NEWS,
+    self::GROUP_GET_NEWS_COLLECTION, Game::GROUP_GET_GAME, Tag::GROUP_GET_TAG])]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Groups([self::GROUP_GET_NEWS, self::GROUP_GET_NEWS_COLLECTION, Game::GROUP_GET_GAME, Tag::GROUP_GET_TAG])]
     private ?\DateTimeInterface $updatedAt = null;
 
-    /**
-     * @var Collection<int, Tag>
-     */
-    #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'news', cascade: ['persist'])]
+    #[ORM\ManyToMany(
+    targetEntity: Tag::class,
+    inversedBy: 'news',
+    cascade: ['persist']
+    )]
     #[Groups([self::GROUP_GET_NEWS])]
     private Collection $tag;
 
-    /**
-     * @var Collection<int, Game>
-     */
+    #[ORM\ManyToOne(inversedBy: 'news')]
+    #[ORM\JoinColumn(
+    nullable: true,
+    onDelete: "SET NULL"
+    )]
+    #[Groups([self::GROUP_GET_NEWS,
+    self::GROUP_GET_NEWS_COLLECTION,
+    Game::GROUP_GET_GAME,
+    Tag::GROUP_GET_TAG]
+    )]
+    private ?User $author = null;
+
     #[ORM\ManyToMany(targetEntity: Game::class, mappedBy: 'news')]
     #[Groups([self::GROUP_GET_NEWS])]
     private Collection $game;
-
-    #[ORM\ManyToOne(inversedBy: 'news')]
-    #[ORM\JoinColumn(nullable: true, onDelete: "SET NULL")]
-    #[Groups([self::GROUP_GET_NEWS, self::GROUP_GET_NEWS_COLLECTION, Game::GROUP_GET_GAME, Tag::GROUP_GET_TAG])]
-    private ?User $author = null;
 
     public function __construct()
     {
@@ -193,9 +205,6 @@ class News
         return $this->updatedAt;
     }
 
-    /**
-     * @return Collection<int, Tag>
-     */
     public function getTag(): Collection
     {
         return $this->tag;

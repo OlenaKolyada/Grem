@@ -7,6 +7,7 @@ import {
     getCategoryName
 } from '@/app/components/list';
 
+// app/components/list/ui/BriefListUi.tsx
 export function BriefListUi({
                                 sortedList,
                                 categoryNames,
@@ -16,7 +17,10 @@ export function BriefListUi({
         <div className="mb-2 flex items-center gap-2">
             {label && <strong>{label}:</strong>}
             <div className="flex flex-wrap gap-1">
-                {sortedList.map((entityItem, index) => (
+                {sortedList.map((
+                    entityItem,
+                    index
+                ) => (
                     <BriefListItemUi
                         key={entityItem.id}
                         entityItem={{
@@ -24,7 +28,10 @@ export function BriefListUi({
                             title: entityItem.title || '',
                             slug: entityItem.slug || ''
                         }}
-                        categoryName={getCategoryName(categoryNames, index)}
+                        categoryName={getCategoryName(
+                            categoryNames,
+                            index
+                        )}
                     />
                 ))}
             </div>

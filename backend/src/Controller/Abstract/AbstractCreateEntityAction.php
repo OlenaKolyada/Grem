@@ -28,9 +28,11 @@ abstract class AbstractCreateEntityAction
     ): JsonResponse {
         $validationErrors = new ConstraintViolationList();
 
-        $this->fieldProcessor->processFieldsFromConfig($entity, $content, $fieldConfig, $validationErrors);
+        $this->fieldProcessor->processFieldsFromConfig(
+        $entity, $content, $fieldConfig, $validationErrors);
 
-        $errorResponse = $this->errorProcessor->processErrors($entity, $validationErrors);
+        $errorResponse = $this->errorProcessor
+        ->processErrors($entity, $validationErrors);
         if ($errorResponse) {
             return $errorResponse;
         }
@@ -38,6 +40,7 @@ abstract class AbstractCreateEntityAction
         $this->manager->persist($entity);
         $this->manager->flush();
 
-        return $this->responseProcessor->createSuccessResponse($entity, $serializationGroup, $statusCode);
+        return $this->responseProcessor
+        ->createSuccessResponse($entity, $serializationGroup, $statusCode);
     }
 }

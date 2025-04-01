@@ -71,7 +71,7 @@ export function CoreEntityUi({
                                 entityFields={entityFields}
                             />
 
-                            {relatedMetaCategories.map(name => (
+                              {relatedMetaCategories.map(name => (
                                 <BriefListContainer
                                     key={name}
                                     entityItems={getMetaEntities(entityItem, name)}
