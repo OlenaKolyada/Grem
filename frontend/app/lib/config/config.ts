@@ -5,7 +5,7 @@ export const META_ENTITIES = ['developer', 'genre', 'platform', 'publisher', 'ta
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL
 
-console.log('NEXT_PUBLIC_ENVIRONMENT', process.env.NEXT_PUBLIC_ENVIRONMENT);
+console.log('NEXT_PUBLIC_API_URL', process.env.NEXT_PUBLIC_API_URL);
 console.log('API URL:', API_URL);
 
 export const API_CONFIG = {
