@@ -7,6 +7,7 @@ export const API_URL = process.env.NEXT_PUBLIC_API_URL
 
 console.log('NEXT_PUBLIC_API_URL', process.env.NEXT_PUBLIC_API_URL);
 console.log('API URL:', API_URL);
+console.log('Document cookie:', typeof window !== 'undefined' ? document.cookie : 'Not in browser');
 
 export const API_CONFIG = {
     timeout: 10000,
