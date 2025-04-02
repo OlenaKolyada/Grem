@@ -68,6 +68,8 @@ class LoginAction extends AbstractController
     #[Route('/api/login', name: 'api_login', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
+        $cookieDomain = $_ENV['COOKIE_DOMAIN'] ?? null;
+
         $data = json_decode($request->getContent(), true);
 
         // Валидация данных
@@ -97,7 +99,7 @@ class LoginAction extends AbstractController
             $userToken->getSessionId(), // Значение (sessionId, не сам JWT)
             $userToken->getExpiresAt()->getTimestamp(), // Время истечения
             '/',                   // Путь
-            null,                  // Домен
+            $cookieDomain,                  // Домен
             false,                 // Только HTTPS (false для HTTP localhost)
             true,                  // HttpOnly
             false,                 // Raw
