@@ -21,13 +21,10 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class DashboardController extends AbstractDashboardController
 {
-    private string $backendUrl;
-    private string $frontendUrl;
-
-    public function __construct(string $backendUrl, string $frontendUrl)
+    public function __construct(
+        private readonly string $backendUrl,
+        private readonly string $frontendUrl)
     {
-        $this->backendUrl = $backendUrl;
-        $this->frontendUrl = $frontendUrl;
     }
 
     #[Route('/admin', name: 'admin')]
