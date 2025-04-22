@@ -28,7 +28,7 @@ class StatsController extends AbstractController
         return $this->render('stats/stats.html.twig', [
             'stats' => $stats,
             'frontend_url' => $this->frontendUrl,
-            'backend_url' => $this->backendUrl,
+            'backend_url' => $this->backendUrl . '/api/admin',
         ]);
     }
 }
