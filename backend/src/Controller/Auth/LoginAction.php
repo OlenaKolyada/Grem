@@ -65,7 +65,7 @@ class LoginAction extends AbstractController
             ]
         )
     )]
-    #[Route('/login', name: 'api_login', methods: ['POST'])]
+    #[Route('/api/login', name: 'api_login', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $data = json_decode($request->getContent(), true);
