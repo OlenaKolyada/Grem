@@ -83,6 +83,19 @@ services:
     networks:
       - grem
 
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./docker/nginx/certbot/www:/var/www/certbot
+      - ./docker/nginx/ssl:/etc/letsencrypt
+    entrypoint: >
+      certonly --webroot
+      --webroot-path=/var/www/certbot
+      -d gremgaming.com -d www.gremgaming.com
+      --agree-tos
+      --email tvoipravda@mail.com
+      --non-interactive
+
 networks:
   grem:
 
