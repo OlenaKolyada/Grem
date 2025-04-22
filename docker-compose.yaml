@@ -59,8 +59,6 @@ services:
       context: .
       dockerfile: docker/frontend/Dockerfile
     container_name: frontend
-    ports:
-      - "80:3001"
     networks:
       - grem
     depends_on:
