@@ -92,12 +92,12 @@ class DashboardController extends AbstractDashboardController
                 [
                     'title' => 'Documentation',
                     'icon' => 'fa-solid fa-file',
-                    'url' => $this->backendUrl . '/doc',
+                    'url' => $this->backendUrl . '/api/doc',
                 ],
                 [
                     'title' => 'Stats',
                     'icon' => 'fa-solid fa-chart-column',
-                    'url' => $this->backendUrl . '/stats',
+                    'url' => $this->backendUrl . '/api/stats',
                 ],
             ],
         ]);
@@ -123,7 +123,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Developers', 'fa-solid fa-user-secret', Developer::class);
         yield MenuItem::linkToCrud('Publishers', 'fa-solid fa-robot', Publisher::class);
         yield MenuItem::linkToCrud('Platforms', 'fa-solid fa-desktop', Platform::class);
-        yield MenuItem::linkToUrl('Documentation', 'fa-solid fa-file', $this->backendUrl . '/doc');
-        yield MenuItem::linkToUrl('Stats', 'fa-solid fa-chart-column', $this->backendUrl . '/stats');
+        yield MenuItem::linkToUrl('Documentation', 'fa-solid fa-file', $this->backendUrl . '/api/doc');
+        yield MenuItem::linkToUrl('Stats', 'fa-solid fa-chart-column', $this->backendUrl . '/api/stats');
     }
 }
