@@ -33,5 +33,5 @@ services:
 
     App\Controller\Admin\DashboardController:
         arguments:
-            $backendUrl: '%app.local_backend_url%'
-            $frontendUrl: '%app.local_frontend_url%'
+            $backendUrl: '%env(resolve:BACKEND_URL)%'
+            $frontendUrl: '%env(resolve:FRONTEND_URL)%'
