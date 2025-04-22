@@ -23,7 +23,7 @@ class LoginAction extends AbstractController
     ) {}
 
     #[OA\Post(
-        path: "/login",
+        path: "/api/login",
         description: "Send credentials to log in and receive a session cookie",
         summary: "Login to get authentication cookie",
         tags: ["Auth"]
@@ -65,7 +65,7 @@ class LoginAction extends AbstractController
             ]
         )
     )]
-    #[Route('/login', name: 'login', methods: ['POST'])]
+    #[Route('/login', name: 'api_login', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         $data = json_decode($request->getContent(), true);
