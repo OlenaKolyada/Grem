@@ -37,7 +37,7 @@ services:
     environment:
       APP_ENV: prod
       DATABASE_URL: "mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@db:3306/grem?serverVersion=8.0"
-      BACKEND_URL: "http://ec2-15-236-109-182.eu-west-3.compute.amazonaws.com"
+      BACKEND_URL: "http://ec2-15-236-109-182.eu-west-3.compute.amazonaws.com:8001"
       FRONTEND_URL: "http://ec2-15-236-109-182.eu-west-3.compute.amazonaws.com"
     depends_on:
       - db
