@@ -40,7 +40,7 @@ services:
       DATABASE_URL: "mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@db:3306/grem?serverVersion=8.0"
       BACKEND_URL: "https://gremgaming.com"
       FRONTEND_URL: "https://gremgaming.com"
-      CORS_ALLOW_ORIGIN: "https://gremgaming.com"
+      CORS_ALLOW_ORIGIN: "^https://www.gremgaming.com$"
     depends_on:
       - db
     ports:
