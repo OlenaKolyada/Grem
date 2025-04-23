@@ -18,7 +18,7 @@ class LogoutAction extends AbstractController
     ) {}
 
     #[OA\Tag(name: "Auth")]
-    #[Route('/api/logout', name: 'api_logout', methods: ['POST'])]
+    #[Route('/api/logout', name: 'app_logout', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
         // Получаем sessionId из куки

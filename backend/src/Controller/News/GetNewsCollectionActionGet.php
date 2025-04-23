@@ -21,7 +21,7 @@ class GetNewsCollectionActionGet extends AbstractGetCoreEntityCollectionAction
         parent::__construct($repository, $cacheService);
     }
 
-    #[Route('/api/news', name: 'api_get_news_collection', methods: ['GET'])]
+    #[Route('/api/news', name: 'app_get_news_collection', methods: ['GET'])]
     #[OA\Response(response: 200,
         description: "Get a News collection",
         content: new OA\JsonContent(

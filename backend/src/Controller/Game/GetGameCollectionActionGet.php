@@ -20,7 +20,7 @@ class GetGameCollectionActionGet extends AbstractGetCoreEntityCollectionAction
     ) {
         parent::__construct($repository, $cacheService);
     }
-    #[Route('/api/game', name: 'api_get_game_collection', methods: ['GET'])]
+    #[Route('/api/game', name: 'app_get_game_collection', methods: ['GET'])]
     #[OA\Response(response: 200,
         description: "Get a Game collection",
         content: new OA\JsonContent(

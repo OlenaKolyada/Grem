@@ -1,0 +1,4 @@
+easy_admin:
+  user:
+    logout_url: app_logout
+    logout_firewall: api

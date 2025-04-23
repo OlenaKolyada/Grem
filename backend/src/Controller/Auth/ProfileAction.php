@@ -12,7 +12,7 @@ use OpenApi\Attributes as OA;
 class ProfileAction extends AbstractController
 {
     #[OA\Tag(name: "Auth")]
-    #[Route('/api/profile', name: 'api_profile', methods: ['GET'])]
+    #[Route('/api/profile', name: 'app_profile', methods: ['GET'])]
     public function __invoke(): Response
     {
         /** @var User $user */

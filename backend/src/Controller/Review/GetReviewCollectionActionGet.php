@@ -21,7 +21,7 @@ class GetReviewCollectionActionGet extends AbstractGetCoreEntityCollectionAction
         parent::__construct($repository, $cacheService);
     }
 
-    #[Route('/api/review', name: 'api_get_review_collection', methods: ['GET'])]
+    #[Route('/api/review', name: 'app_get_review_collection', methods: ['GET'])]
     #[OA\Response(response: 200,
         description: "Get a Review collection",
         content: new OA\JsonContent(

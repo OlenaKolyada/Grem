@@ -21,7 +21,7 @@ class GetCommentCollectionAction extends AbstractGetMetaEntityCollectionAction
         parent::__construct($repository, $cacheService);
     }
 
-    #[Route('/api/comment', name: 'api_get_comment_collection', methods: ['GET'])]
+    #[Route('/api/comment', name: 'app_get_comment_collection', methods: ['GET'])]
     #[OA\Response(response: 200,
         description: "Get a Comment collection",
         content: new OA\JsonContent(
