@@ -23,6 +23,8 @@ security:
             pattern: ^/api
             stateless: true
             custom_authenticator: App\Security\TokenAuthenticator
+            logout:
+                path: /api/logout
 
     access_control:
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
