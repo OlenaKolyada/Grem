@@ -15,7 +15,7 @@ class StatsController extends AbstractController
     {
     }
 
-    #[Route('/stats', name: 'app_stats')]
+    #[Route('/api/stats', name: 'app_stats')]
     public function index(): Response
     {
 
